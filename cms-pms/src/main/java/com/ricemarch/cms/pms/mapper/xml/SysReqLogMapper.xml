@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.SysReqLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.SysReqLog">
+        <id column="id" property="id" />
+        <result column="source" property="source" />
+        <result column="company_id" property="companyId" />
+        <result column="institution_id" property="institutionId" />
+        <result column="cell_id" property="cellId" />
+        <result column="open_id" property="openId" />
+        <result column="user_id" property="userId" />
+        <result column="username" property="username" />
+        <result column="token" property="token" />
+        <result column="reqUrl" property="requrl" />
+        <result column="reqUri" property="requri" />
+        <result column="time" property="time" />
+        <result column="method" property="method" />
+        <result column="reqParams" property="reqparams" />
+        <result column="resParams" property="resparams" />
+        <result column="createTime" property="createtime" />
+        <result column="requestId" property="requestid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, source, company_id, institution_id, cell_id, open_id, user_id, username, token, reqUrl, reqUri, time, method, reqParams, resParams, createTime, requestId
+    </sql>
+
+</mapper>

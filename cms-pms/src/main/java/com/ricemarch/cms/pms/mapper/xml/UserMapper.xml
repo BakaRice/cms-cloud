@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.User">
+        <id column="id" property="id" />
+        <result column="company_id" property="companyId" />
+        <result column="institution_id" property="institutionId" />
+        <result column="cell_id" property="cellId" />
+        <result column="role_id" property="roleId" />
+        <result column="profession_id" property="professionId" />
+        <result column="name" property="name" />
+        <result column="password" property="password" />
+        <result column="account_state" property="accountState" />
+        <result column="phone" property="phone" />
+        <result column="birthday" property="birthday" />
+        <result column="address" property="address" />
+        <result column="salary" property="salary" />
+        <result column="age" property="age" />
+        <result column="idcard_number" property="idcardNumber" />
+        <result column="mark" property="mark" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, company_id, institution_id, cell_id, role_id, profession_id, name, password, account_state, phone, birthday, address, salary, age, idcard_number, mark, create_by, create_time, update_by, update_time, is_delete
+    </sql>
+
+</mapper>
