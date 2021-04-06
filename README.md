@@ -4,4 +4,5 @@
 
 - cms-eureka
 - cms-pms
+- cms-gateway
 - ...
