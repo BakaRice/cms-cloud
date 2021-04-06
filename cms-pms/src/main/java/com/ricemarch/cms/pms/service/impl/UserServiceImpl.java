@@ -8,10 +8,11 @@ import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.common.component.EncryptComponent;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.entity.User;
-import com.ricemarch.cms.pms.mapper.UserMapper;
+import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -40,6 +41,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserRoleMapper roleMapper;
+    @Autowired
+    ProfessionMapper professionMapper;
+    @Autowired
+    CellsMapper cellsMapper;
+    @Autowired
+    InstitutionMapper institutionMapper;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -50,14 +59,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Boolean saveUser(UserAddRequest request) {
 
         UserCommonRequest userCommonRequest = request.getUserCommonRequest();
+        //查询手机号是否重复
         String phone = userCommonRequest.getPhone();
-        User selectByPhone = selectByPhone(phone);
-        if (null != selectByPhone) {
-            throw new PmsServiceException("该手机号" + phone + "已存在");
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone", phone);
+        queryWrapper.eq("is_delete", (short) 0);
+        Optional.ofNullable(userMapper.selectOne(queryWrapper))
+                .ifPresent(u -> {
+                    throw new PmsServiceException("该手机号" + u.getPhone() + "已存在");
+                });
+        //查询角色是否存在
+        Optional.ofNullable(roleMapper.selectById(request.getUserCommonRequest().getRoleId()))
+                .orElseThrow(() -> new PmsServiceException("当前插入用户，用户角色不存在"));
+        //查询工种是否存在
+        Optional.ofNullable(professionMapper.selectById(request.getUserCommonRequest().getProfessionId()))
+                .orElseThrow(() -> new PmsServiceException("当前插入用户，用户工种不存在"));
+
+        //cellId存在时，查询cell是否存在
+        if (null != request.getCellId() && 0L != request.getCellId()) {
+            Optional.ofNullable(cellsMapper.selectById(request.getCellId()))
+                    .orElseThrow(() -> new PmsServiceException("当前插入用户，所选班组不存在"));
         }
-        //TODO 还需要对现有用户进行查询 确认没有重复手机号等
+        //init Id 存在时，查询init是否存在
+        if (null != request.getInstitutionId() && 0L != request.getInstitutionId()) {
+            Optional.ofNullable(cellsMapper.selectById(request.getCellId()))
+                    .orElseThrow(() -> new PmsServiceException("当前插入用户，所选组织不存在"));
+        }
         User user = new User();
         BeanUtils.copyProperties(request.getUserCommonRequest(), user);
+        //初始化密码为手机号 并进行加密
         user.setPassword(encoder.encode(user.getPhone()));
         user.setId(null);
 
@@ -73,12 +103,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String phone = userCommonRequest.getPhone();
         User selectByPhone = selectByPhone(phone);
 
-        //TODO PASSWORD
+        //查询角色是否存在
+        Optional.ofNullable(roleMapper.selectById(userUpdateRequest.getUserCommonRequest().getRoleId()))
+                .orElseThrow(() -> new PmsServiceException("当前修改用户，用户角色不存在"));
+        //查询工种是否存在
+        Optional.ofNullable(professionMapper.selectById(userUpdateRequest.getUserCommonRequest().getProfessionId()))
+                .orElseThrow(() -> new PmsServiceException("当前修改用户，用户工种不存在"));
 
+        //cellId存在时，查询cell是否存在
+        if (null != userUpdateRequest.getCellId() && 0L != userUpdateRequest.getCellId()) {
+            Optional.ofNullable(cellsMapper.selectById(userUpdateRequest.getCellId()))
+                    .orElseThrow(() -> new PmsServiceException("当前修改用户，所选班组不存在"));
+        }
+        //init Id 存在时，查询init是否存在
+        if (null != userUpdateRequest.getInstitutionId() && 0L != userUpdateRequest.getInstitutionId()) {
+            Optional.ofNullable(cellsMapper.selectById(userUpdateRequest.getCellId()))
+                    .orElseThrow(() -> new PmsServiceException("当前修改用户，所选组织不存在"));
+        }
+
+        //此处不修改密码 修改密码由单独接口进行
         User updateUser = new User();
         BeanUtils.copyProperties(userCommonRequest, updateUser);
         updateUser.setId(selectByPhone.getId());
-        updateUser.setUpdateBy("//TODO");
         updateUser.setUpdateTime(LocalDateTime.now());
 
         int i = userMapper.updateById(updateUser);

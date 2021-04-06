@@ -6,6 +6,7 @@ import com.ricemarch.cms.pms.bo.request.UserLoginRequest;
 import com.ricemarch.cms.pms.bo.response.UserLoginResponse;
 import com.ricemarch.cms.pms.common.component.EncryptComponent;
 import com.ricemarch.cms.pms.common.component.MyToken;
+import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
 import com.ricemarch.cms.pms.entity.User;
@@ -52,7 +53,13 @@ public class UserController {
 
     @PostMapping("/login")
     public BaseResponse<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) {
-        User login = userService.selectByPhone(userLoginRequest.getPhone());
+        User login;
+        try {
+            login = userService.selectByPhone(userLoginRequest.getPhone());
+        } catch (PmsServiceException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
+        }
+
 
         User user = Optional.ofNullable(login)
                 .filter(u -> encoder.matches(userLoginRequest.getPassword(), u.getPassword()))

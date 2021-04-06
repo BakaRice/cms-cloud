@@ -1,6 +1,6 @@
 server:
   port: 8761
-  ###eureka###
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
@@ -10,12 +10,12 @@ eureka:
     fetch-registry: false
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-    ###spring info###
+  server:
+    #开发时使用的强制下线
+    enable-self-preservation: false
 spring:
   application:
     name: cms-eureka-service
-  profiles:
-    active: dev
 info:
   app:
     name: Cms-Eureka-Server

@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.bo.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Blob;
@@ -14,6 +15,7 @@ import java.util.Date;
  * @date 2021/3/24 22:41
  */
 @Data
+@Accessors(chain = true)
 @Slf4j
 public class UserCommonRequest {
 
