@@ -14,12 +14,24 @@ spring:
   application:
     name: cms-pms-service
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: NEFU
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    # remote mysql
+    #username: root
+    #password: NEFU
+    #url: jdbc:mysql://test.ricemarch.com:3306/cms_pms?serverTimeZone=GMT%2B8
+
+    # local mysql
+    #username: root
     #password: root
-    url: jdbc:mysql://test.ricemarch.com:3306/cms_pms?serverTimeZone=GMT%2B8
     #url: jdbc:mysql://localhost:3306/cms_pms?serverTimezone=Asia/Shanghai
+
+    # remote postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: NEFU
+    url: jdbc:postgresql://test.ricemarch.com:5432/cms_pms_pg
+
+
   profiles:
     active: dev
 #mybatis-plus
