@@ -1,11 +1,21 @@
+# port
+server:
+  port: 8762
+
+# eureka
 eureka:
   instance:
     instance-id: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
 spring:
   application:
     name: cms-gateway-service
-server:
-  port: 8762
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开启从注册中心动态创建路由的功能，利用微服务名称进行路由
+          lower-case-service-id: true
