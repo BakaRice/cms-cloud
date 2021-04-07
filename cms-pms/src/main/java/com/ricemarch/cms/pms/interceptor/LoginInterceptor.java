@@ -38,7 +38,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         MyToken myToken = Optional.ofNullable(request.getHeader(MyToken.AUTHORIZATION))
                 .map(auth -> encryptComponent.decryptToken(auth))
-                .orElseThrow((() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "登录失败")));
+                .orElseThrow((() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "未登录")));
         String phone = Optional.of(myToken.getPhone())
                 .orElseThrow((() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "登录失败")));
         String role = Optional.of(myToken.getRole())

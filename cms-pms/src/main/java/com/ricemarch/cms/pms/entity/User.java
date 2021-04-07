@@ -1,5 +1,7 @@
 package com.ricemarch.cms.pms.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,6 +19,7 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@TableName("user_pg")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,11 +80,11 @@ public class User implements Serializable {
      */
     private String mark;
 
-    private String createBy;
+    private Long createBy;
 
     private LocalDateTime createTime;
 
-    private String updateBy;
+    private Long updateBy;
 
     private LocalDateTime updateTime;
 

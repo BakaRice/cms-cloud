@@ -64,11 +64,11 @@ public class UserCommonRequest {
     @ApiModelProperty("备注")
     private String mark;
 
-    private String createBy;
+    private Long createBy;
 
     private LocalDateTime createTime;
 
-    private String updateBy;
+    private Long updateBy;
 
     private LocalDateTime updateTime;
 

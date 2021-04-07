@@ -5,11 +5,9 @@ import com.ricemarch.cms.pms.entity.Profession;
 import com.ricemarch.cms.pms.entity.UserRole;
 import com.ricemarch.cms.pms.service.ProfessionService;
 import com.ricemarch.cms.pms.service.UserRoleService;
-import com.ricemarch.cms.pms.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +33,7 @@ public class InitComponent implements InitializingBean {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         //TODO 有问题 主键自增的问题
         //当不存在 系统管理员role（1001）和 系统管理profession（2001）时,自动进行初始化
         QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
@@ -45,8 +43,8 @@ public class InitComponent implements InitializingBean {
             UserRole userRole = new UserRole();
             userRole.setName("系统管理员");
             userRole.setId(1001);
-            userRole.setCreateBy("system");
-            userRole.setUpdateBy("system");
+            userRole.setCreateBy(-1L);
+            userRole.setUpdateBy(-1L);
             roleService.save(userRole);
             log.debug("初始化系统管理员角色：userRole:{}", userRole);
         }

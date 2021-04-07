@@ -42,7 +42,8 @@ public interface UserService extends IService<User> {
      * 通过手机号逻辑删除用户 is_delete 置为 true
      *
      * @param phone
+     * @param updateUserId
      * @return
      */
-    Boolean removeByPhone(String phone);
+    Boolean removeByPhone(String phone, Long updateUserId);
 }

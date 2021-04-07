@@ -3,6 +3,8 @@ package com.ricemarch.cms.pms.controller;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ricemarch.cms.pms.bo.request.*;
+import com.ricemarch.cms.pms.bo.response.UserCommonResponse;
+import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * admin controller
@@ -47,12 +51,11 @@ public class AdminController extends BaseController {
     @PostMapping("/user")
     public BaseResponse postUser(@Valid @RequestBody UserAddRequest request) {
         String method = "postInfo";
-        String createUser = super.getCustomer().getName();
+        Long createUserId = getUserId();
         Integer roleId = super.getCustomer().getRoleId();
 
-        String updateUser = super.getCustomer().getName();
-        request.getUserCommonRequest().setCreateBy(createUser);
-        request.getUserCommonRequest().setUpdateBy(updateUser);
+        request.getUserCommonRequest().setCreateBy(createUserId);
+        request.getUserCommonRequest().setUpdateBy(createUserId);
         log.info(logClassMsg + method + "request:{}", JSON.toJSONString(request));
         Boolean isSuccess = userService.saveUser(request);
         if (isSuccess) {
@@ -67,7 +70,11 @@ public class AdminController extends BaseController {
     public BaseResponse putUser(@Valid @RequestBody UserUpdateRequest request) {
         String method = "putUser";
         log.info(logClassMsg + method + "request:{}", JSON.toJSONString(request));
-
+        Long id = getUserId();
+        if (null == id) {
+            throw new PmsServiceException("修改用户信息失败");
+        }
+        //以手机号为维度确认唯一性
         Boolean isSuccess = userService.updateUser(request);
         if (isSuccess) {
             return BaseResponse.success("修改用户成功");
@@ -78,16 +85,22 @@ public class AdminController extends BaseController {
 
     @ApiOperation("通过userId获取用户")
     @GetMapping("/user/{userId}")
-    public BaseResponse getUser(@PathVariable("userId") String userId) {
+    public BaseResponse<UserCommonResponse> getUser(@PathVariable("userId") Long userId) {
         User user = userService.getById(userId);
-        return new BaseResponse(user);
+        if (user == null) {
+            return new BaseResponse<>(BizErrorCodeEnum.USER_DOES_NOT_EXISTS);
+        }
+        UserCommonResponse u = new UserCommonResponse();
+        BeanUtils.copyProperties(user, u);
+        return new BaseResponse<>(u);
     }
 
     @ApiOperation("删除用户")
     @DeleteMapping("/user")
     public BaseResponse delUser(@RequestBody UserCommonRequest request) {
         String phone = request.getPhone();
-        Boolean isSuccess = userService.removeByPhone(phone);
+        Long updateUserId = getUserId();
+        Boolean isSuccess = userService.removeByPhone(phone,updateUserId);
         if (isSuccess) {
             return BaseResponse.success("删除用户成功");
         } else {
@@ -97,16 +110,15 @@ public class AdminController extends BaseController {
 
     //----以下两项都可以在info中被查看 但仅admin能进行修改
 
-    @PostMapping("/role/{userId}")
-    public BaseResponse putRole(@RequestBody BaseRequest request, @PathVariable("userId") String userId) {
-        return new BaseResponse();
-    }
-
     @ApiOperation("新增用户角色")
     @PostMapping("/role")
     public BaseResponse postRole(@Valid @RequestBody AdminRoleReq roleReq) {
-        roleReq.setCreateBy(super.getCustomer().getName());
-        roleReq.setUpdateBy(super.getCustomer().getName());
+        Long id = getUserId();
+        if (null == id) {
+            throw new PmsServiceException("新增用户角色失败");
+        }
+        roleReq.setCreateBy(super.getCustomer().getId());
+        roleReq.setUpdateBy(super.getCustomer().getId());
         UserRole userRole = new UserRole();
         BeanUtils.copyProperties(roleReq, userRole);
         try {
@@ -140,11 +152,6 @@ public class AdminController extends BaseController {
         } catch (Exception e) {
             throw new PmsServiceException("新增用户工种失败");
         }
-        return new BaseResponse();
-    }
-
-    @PostMapping("/profession/{userId}")
-    public BaseResponse postProfession(@RequestBody BaseRequest request, @PathVariable("userId") String userId) {
         return new BaseResponse();
     }
 

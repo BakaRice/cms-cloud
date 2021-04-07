@@ -5,25 +5,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ricemarch.cms.pms.bo.request.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
-import com.ricemarch.cms.pms.common.component.EncryptComponent;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.entity.User;
 import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.TooManyListenersException;
 
 /**
  * <p>
@@ -125,7 +120,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User updateUser = new User();
         BeanUtils.copyProperties(userCommonRequest, updateUser);
         updateUser.setId(selectByPhone.getId());
+        //此处不能
+        updateUser.setIsDelete(selectByPhone.getIsDelete());
         updateUser.setUpdateTime(LocalDateTime.now());
+
 
         int i = userMapper.updateById(updateUser);
         return i == 1;
@@ -146,12 +144,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Boolean removeByPhone(String phone) {
+    public Boolean removeByPhone(String phone, Long updateUserId) {
         User removeUser = selectByPhone(phone);
+        //不存在当前用户时 直接返回
+        if (null == removeUser) {
+            return false;
+        }
 
         removeUser.setIsDelete((short) 1);
 
-        removeUser.setUpdateBy("//TODO");
+        removeUser.setUpdateBy(updateUserId);
         removeUser.setUpdateTime(LocalDateTime.now());
 
         int i = userMapper.updateById(removeUser);

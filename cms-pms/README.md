@@ -7,14 +7,17 @@ controller 由三部分组成，分别是最高权限的admin，各个组织的l
 admin包含新增用户，查看任意用户，查看所有用户的分页，修改用户，删除用户
 
 - [X] POST /user 新增用户
-  
-    新增用户前要用拦截器校验当前用户是否有admin权限，判断权限后，判断插入的新用户的属性是否满足（手机号，角色，工种，班组，组织），之后对手机号进行加密作为初始密码进行存储。
-  
-- [ ] PUT /user 修改用户
+
+  新增用户前要用拦截器校验当前用户是否有admin权限，判断权限后，判断插入的新用户的属性是否满足（手机号，角色，工种，班组，组织），之后对手机号进行加密作为初始密码进行存储。
+
+- [x] PUT /user 修改用户
+
+  修改用户信息以及 用户角色 和 用户工种 ，但不能修改用户是否被删除 以及 修改id
+
 - [ ] GET /user/{userId} 查看用户
 - [ ] DELETE /user/ 删除用户 （->/user/{userId}）
-- [ ] POST /role/{userId} (-> PUT) 修改用户权限
-- [ ] POST /profession/{userId} (-> PUT) 修改用户工种
+- [ ] ~~POST /role/{userId} (-> PUT) 修改用户权限~~(被包含在修改用户中)
+- [ ] ~~POST /profession/{userId} (-> PUT) 修改用户~~
 
 leader包含了
 
@@ -37,3 +40,7 @@ User 包含了
 - [ ] POST /info 修改信息 （ -> PUT）
 - [ ] GET /schedule 查看排班
 - [ ] POST /schedule 请假等操作 实际上是对排班信息的一种修改
+
+P:
+
+- mybatis-plus 从service的getbyId 不能识别id 的类型 如果出现id类型错误 只有当执行时 才能够发现错误

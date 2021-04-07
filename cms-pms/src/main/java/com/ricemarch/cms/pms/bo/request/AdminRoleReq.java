@@ -22,11 +22,11 @@ public class AdminRoleReq implements Serializable {
     @NotNull(message = "角色名不能为空")
     private String name;
 
-    private String createBy;
+    private Long createBy;
 
     private LocalDateTime createTime;
 
-    private String updateBy;
+    private Long updateBy;
 
     private LocalDateTime updateTime;
 }
