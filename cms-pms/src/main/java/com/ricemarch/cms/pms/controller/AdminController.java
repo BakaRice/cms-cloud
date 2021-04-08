@@ -6,14 +6,11 @@ import com.ricemarch.cms.pms.bo.request.*;
 import com.ricemarch.cms.pms.bo.response.UserCommonResponse;
 import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
-import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
 import com.ricemarch.cms.pms.entity.Profession;
 import com.ricemarch.cms.pms.entity.User;
 import com.ricemarch.cms.pms.entity.UserRole;
-import com.ricemarch.cms.pms.service.ProfessionService;
-import com.ricemarch.cms.pms.service.UserRoleService;
-import com.ricemarch.cms.pms.service.UserService;
+import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * admin controller
@@ -45,14 +40,51 @@ public class AdminController extends BaseController {
     UserRoleService roleService;
     @Autowired
     ProfessionService professionService;
+    @Autowired
+    CellsService cellService;
+    @Autowired
+    InstitutionService institutionService;
 
+
+    @ApiOperation("新增cell")
+    @PostMapping("/cell")
+    public BaseResponse postCell(@Valid @RequestBody CellAddRequest request) {
+        String method = "postInfo";
+        Long createUserId = getUserId();
+        request.getCellCommonRequest().setCreateBy(createUserId);
+        request.getCellCommonRequest().setUpdateBy(createUserId);
+        log.info(logClassMsg + "新增cell,request:{}", JSON.toJSONString(request));
+        boolean isSuccess = cellService.saveCell(request);
+        if (isSuccess) {
+            return BaseResponse.success("新增班组成功");
+        } else {
+            return BaseResponse.operationFailed("新增班组失败");
+        }
+    }
+
+
+    @ApiOperation("新增institution")
+    @PostMapping("/institution")
+    public BaseResponse postInit(@Valid @RequestBody InstitutionAddRequest request) {
+        String method = "postInfo";
+        Long createUserId = getUserId();
+        request.getInstitutionCommonRequest().setCreateBy(createUserId);
+        request.getInstitutionCommonRequest().setUpdateBy(createUserId);
+
+        log.info(logClassMsg + "新增institution,request:{}", JSON.toJSONString(request));
+        boolean isSuccess = institutionService.saveInstitution(request);
+        if (isSuccess) {
+            return BaseResponse.success("新增机构成功");
+        } else {
+            return BaseResponse.operationFailed("新增机构失败");
+        }
+    }
 
     @ApiOperation("新增用户")
     @PostMapping("/user")
     public BaseResponse postUser(@Valid @RequestBody UserAddRequest request) {
         String method = "postInfo";
         Long createUserId = getUserId();
-        Integer roleId = super.getCustomer().getRoleId();
 
         request.getUserCommonRequest().setCreateBy(createUserId);
         request.getUserCommonRequest().setUpdateBy(createUserId);
@@ -100,7 +132,7 @@ public class AdminController extends BaseController {
     public BaseResponse delUser(@RequestBody UserCommonRequest request) {
         String phone = request.getPhone();
         Long updateUserId = getUserId();
-        Boolean isSuccess = userService.removeByPhone(phone,updateUserId);
+        Boolean isSuccess = userService.removeByPhone(phone, updateUserId);
         if (isSuccess) {
             return BaseResponse.success("删除用户成功");
         } else {

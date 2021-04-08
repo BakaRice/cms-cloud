@@ -22,6 +22,8 @@ public class Cells implements Serializable {
 
     private Long id;
 
+    private Long InstitutionId;
+
     private String name;
 
     private String address;

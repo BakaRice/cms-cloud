@@ -2,12 +2,13 @@ package com.ricemarch.cms.pms.entity;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ricemarch
@@ -19,7 +20,9 @@ public class Institution implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      private Long id;
+    private Long id;
+
+    private Long companyId;
 
     private String name;
 

@@ -57,7 +57,8 @@ public class SysReqLogServiceImpl extends ServiceImpl<SysReqLogMapper, SysReqLog
         HttpServletRequest request = Optional.ofNullable(sra.getRequest())
                 .orElseThrow((() -> new Exception("请求不能为空")));
 //        log.info(logMsg + "request:{}", JSON.toJSONString(request));
-        String url = Optional.ofNullable(request.getRequestURL()).orElse(new StringBuffer()).toString();
+        StringBuffer url_sb = Optional.ofNullable(request.getRequestURL()).orElse(new StringBuffer());
+        String url = url_sb.toString();
         String uri = Optional.ofNullable(request.getRequestURI()).orElse("");
         String method = request.getMethod();
 

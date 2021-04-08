@@ -1,11 +1,14 @@
 package com.ricemarch.cms.pms.common.component;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ricemarch.cms.pms.entity.Company;
 import com.ricemarch.cms.pms.entity.Profession;
 import com.ricemarch.cms.pms.entity.UserRole;
+import com.ricemarch.cms.pms.service.CompanyService;
 import com.ricemarch.cms.pms.service.ProfessionService;
 import com.ricemarch.cms.pms.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +33,9 @@ public class InitComponent implements InitializingBean {
 
     @Autowired
     private ProfessionService professionService;
+
+    @Autowired
+    private CompanyService companyService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -58,6 +64,21 @@ public class InitComponent implements InitializingBean {
             profession.setName("系统管理");
             professionService.save(profession);
             log.debug("初始化系统管理工种：profession:{}", profession);
+        }
+
+        QueryWrapper<Company> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("name", "default");
+        Company isExistCompany = companyService.getOne(queryWrapper2);
+        if (null == isExistCompany) {
+            Company company = new Company();
+            company.setId(1000000001L);
+            company.setName("default");
+            company.setAddress("default address");
+            company.setDescription("default description");
+            company.setContactName("default contact");
+            company.setContactMobilePhone("");
+            companyService.save(company);
+            log.debug("初始化公司，company:{}", company);
         }
 
     }
