@@ -1,6 +1,6 @@
 package com.ricemarch.cms.pms.service;
 
-import com.ricemarch.cms.pms.bo.request.UserAddRequest;
+import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;

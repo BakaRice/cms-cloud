@@ -1,4 +1,4 @@
-package com.ricemarch.cms.pms.bo.request;
+package com.ricemarch.cms.pms.bo.request.admin;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

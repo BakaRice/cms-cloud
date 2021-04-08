@@ -1,11 +1,9 @@
 package com.ricemarch.cms.pms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ricemarch.cms.pms.bo.request.CellCommonRequest;
-import com.ricemarch.cms.pms.bo.request.InstitutionAddRequest;
-import com.ricemarch.cms.pms.bo.request.InstitutionCommonRequest;
+import com.ricemarch.cms.pms.bo.request.admin.InstitutionAddRequest;
+import com.ricemarch.cms.pms.bo.request.admin.InstitutionCommonRequest;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
-import com.ricemarch.cms.pms.entity.Cells;
 import com.ricemarch.cms.pms.entity.Company;
 import com.ricemarch.cms.pms.entity.Institution;
 import com.ricemarch.cms.pms.mapper.CompanyMapper;

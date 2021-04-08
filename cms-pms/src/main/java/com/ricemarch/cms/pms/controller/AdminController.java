@@ -2,11 +2,16 @@ package com.ricemarch.cms.pms.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ricemarch.cms.pms.bo.request.*;
+import com.ricemarch.cms.pms.bo.request.admin.*;
+import com.ricemarch.cms.pms.bo.response.CellListResponse;
 import com.ricemarch.cms.pms.bo.response.UserCommonResponse;
 import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
+import com.ricemarch.cms.pms.entity.Cells;
 import com.ricemarch.cms.pms.entity.Profession;
 import com.ricemarch.cms.pms.entity.User;
 import com.ricemarch.cms.pms.entity.UserRole;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * admin controller
@@ -61,6 +67,18 @@ public class AdminController extends BaseController {
             return BaseResponse.operationFailed("新增班组失败");
         }
     }
+
+    @ApiOperation("查询cell 分页")
+    @GetMapping("/cell/{pageNum}/{pageSize}")
+    public BaseResponse<PageInfo<Cells>> postCellPages(@PathVariable int pageNum, @PathVariable int pageSize) {
+        CellPageRequest request = new CellPageRequest();
+        request.setPageNum(pageNum);
+        request.setPageSize(pageSize);
+        PageInfo<Cells> cellPageResponse;
+        cellPageResponse = cellService.listCell4Page(request);
+        return new BaseResponse<>(cellPageResponse);
+    }
+
 
 
     @ApiOperation("新增institution")

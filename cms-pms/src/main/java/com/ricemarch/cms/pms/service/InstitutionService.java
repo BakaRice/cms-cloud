@@ -1,6 +1,6 @@
 package com.ricemarch.cms.pms.service;
 
-import com.ricemarch.cms.pms.bo.request.InstitutionAddRequest;
+import com.ricemarch.cms.pms.bo.request.admin.InstitutionAddRequest;
 import com.ricemarch.cms.pms.entity.Institution;
 import com.baomidou.mybatisplus.extension.service.IService;
 

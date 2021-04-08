@@ -2,7 +2,7 @@ package com.ricemarch.cms.pms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ricemarch.cms.pms.bo.request.UserAddRequest;
+import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;

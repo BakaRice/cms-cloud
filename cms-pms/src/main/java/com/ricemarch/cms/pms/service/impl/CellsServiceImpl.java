@@ -1,8 +1,13 @@
 package com.ricemarch.cms.pms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ricemarch.cms.pms.bo.request.CellAddRequest;
-import com.ricemarch.cms.pms.bo.request.CellCommonRequest;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ricemarch.cms.pms.bo.request.admin.CellAddRequest;
+import com.ricemarch.cms.pms.bo.request.admin.CellCommonRequest;
+import com.ricemarch.cms.pms.bo.request.admin.CellPageRequest;
+import com.ricemarch.cms.pms.bo.response.CellListResponse;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.entity.Cells;
 import com.ricemarch.cms.pms.entity.Institution;
@@ -14,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -56,5 +62,19 @@ public class CellsServiceImpl extends ServiceImpl<CellsMapper, Cells> implements
         int insert = cellsMapper.insert(cell);
 
         return insert == 1;
+    }
+
+    @Override
+    public PageInfo<Cells> listCell4Page(CellPageRequest req) {
+        PageHelper.startPage(req.getPageNum(), req.getPageSize());
+        List<Cells> cellsList = cellsMapper.selectList(Wrappers.emptyWrapper());
+        PageInfo<Cells> cellsPageInfo = new PageInfo<>(cellsList);
+
+        //...
+
+        cellsPageInfo.setStartRow(req.getPageNum());
+        cellsPageInfo.setPageSize(req.getPageSize());
+
+        return cellsPageInfo;
     }
 }

@@ -1,5 +1,7 @@
-package com.ricemarch.cms.pms.bo.request;
+package com.ricemarch.cms.pms.bo.request.admin;
 
+import com.ricemarch.cms.pms.bo.request.CmsBaseRequest;
+import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
