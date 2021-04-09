@@ -11,10 +11,7 @@ import com.ricemarch.cms.pms.bo.response.UserCommonResponse;
 import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
-import com.ricemarch.cms.pms.entity.Cells;
-import com.ricemarch.cms.pms.entity.Profession;
-import com.ricemarch.cms.pms.entity.User;
-import com.ricemarch.cms.pms.entity.UserRole;
+import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -69,16 +66,24 @@ public class AdminController extends BaseController {
     }
 
     @ApiOperation("查询cell 分页")
-    @GetMapping("/cell/{pageNum}/{pageSize}")
-    public BaseResponse<PageInfo<Cells>> postCellPages(@PathVariable int pageNum, @PathVariable int pageSize) {
+    @GetMapping("/cell")
+    public BaseResponse<PageInfo<Cells>> postCellPages(@RequestParam int pageNum, @RequestParam int pageSize) {
         CellPageRequest request = new CellPageRequest();
         request.setPageNum(pageNum);
         request.setPageSize(pageSize);
-        PageInfo<Cells> cellPageResponse;
-        cellPageResponse = cellService.listCell4Page(request);
+        PageInfo<Cells> cellPageResponse = cellService.listCell4Page(request);
         return new BaseResponse<>(cellPageResponse);
     }
 
+    @ApiOperation("查询institution 分页")
+    @GetMapping("/institution")
+    public BaseResponse<PageInfo<Institution>> postInstitution(@RequestParam int pageNum, @RequestParam int pageSize) {
+        InstitutionPageRequest request = new InstitutionPageRequest();
+        request.setPageNum(pageNum);
+        request.setPageSize(pageSize);
+        PageInfo<Institution> institutionPageInfo = institutionService.listInstitution4Page(request);
+        return new BaseResponse<>(institutionPageInfo);
+    }
 
 
     @ApiOperation("新增institution")

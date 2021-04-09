@@ -1,9 +1,14 @@
 package com.ricemarch.cms.pms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ricemarch.cms.pms.bo.request.admin.InstitutionAddRequest;
 import com.ricemarch.cms.pms.bo.request.admin.InstitutionCommonRequest;
+import com.ricemarch.cms.pms.bo.request.admin.InstitutionPageRequest;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
+import com.ricemarch.cms.pms.entity.Cells;
 import com.ricemarch.cms.pms.entity.Company;
 import com.ricemarch.cms.pms.entity.Institution;
 import com.ricemarch.cms.pms.mapper.CompanyMapper;
@@ -14,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -57,5 +63,19 @@ public class InstitutionServiceImpl extends ServiceImpl<InstitutionMapper, Insti
         int insert = institutionMapper.insert(institution);
 
         return insert == 1;
+    }
+
+    @Override
+    public PageInfo<Institution> listInstitution4Page(InstitutionPageRequest req) {
+        PageHelper.startPage(req.getPageNum(), req.getPageSize());
+        List<Institution> institutionList = institutionMapper.selectList(Wrappers.emptyWrapper());
+        PageInfo<Institution> institutionPageInfo = new PageInfo<>(institutionList);
+
+        //...
+
+        institutionPageInfo.setStartRow(req.getPageNum());
+        institutionPageInfo.setPageSize(req.getPageSize());
+
+        return institutionPageInfo;
     }
 }

@@ -11,6 +11,7 @@ import com.ricemarch.cms.pms.entity.User;
 import com.ricemarch.cms.pms.entity.UserRole;
 import com.ricemarch.cms.pms.service.UserRoleService;
 import com.ricemarch.cms.pms.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,7 @@ public class UserController {
     @Autowired
     UserRoleService userRoleService;
 
+    @ApiOperation("登录")
     @PostMapping("/login")
     public BaseResponse<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) {
         User login;

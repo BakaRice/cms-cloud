@@ -1,6 +1,8 @@
 package com.ricemarch.cms.pms.service;
 
+import com.github.pagehelper.PageInfo;
 import com.ricemarch.cms.pms.bo.request.admin.InstitutionAddRequest;
+import com.ricemarch.cms.pms.bo.request.admin.InstitutionPageRequest;
 import com.ricemarch.cms.pms.entity.Institution;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface InstitutionService extends IService<Institution> {
 
     boolean saveInstitution(InstitutionAddRequest request);
+
+    PageInfo<Institution> listInstitution4Page(InstitutionPageRequest request);
 }
