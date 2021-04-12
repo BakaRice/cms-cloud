@@ -5,6 +5,8 @@ import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 员工 服务类
@@ -46,4 +48,38 @@ public interface UserService extends IService<User> {
      * @return
      */
     Boolean removeByPhone(String phone, Long updateUserId);
+
+    /**
+     * 通过userid和cellid 查找指定用户
+     *
+     * @param userId
+     * @param cellId
+     * @return
+     */
+    User selectByUserIdAndCellId(Long userId, Long cellId);
+
+    /**
+     * 通过userid和institutionId查找指定用户
+     *
+     * @param userId
+     * @param institutionId
+     * @return
+     */
+    User selectByUserIdAndInstitutionId(Long userId, Long institutionId);
+
+    /**
+     * 查询指定cellid对应的list user
+     *
+     * @param cellId
+     * @return
+     */
+    List<User> selectByCellId(Long cellId);
+
+    /**
+     * 查询指定InstitutionId对应的list user
+     *
+     * @param InstitutionId
+     * @return
+     */
+    List<User> selectByInstitutionId(Long InstitutionId);
 }

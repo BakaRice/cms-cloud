@@ -20,4 +20,6 @@ public interface CellsService extends IService<Cells> {
     boolean saveCell(CellAddRequest request);
 
     PageInfo<Cells> listCell4Page(CellPageRequest request);
+
+    PageInfo<Cells> listCellByInstitution4Page(CellPageRequest request, long institutionId);
 }

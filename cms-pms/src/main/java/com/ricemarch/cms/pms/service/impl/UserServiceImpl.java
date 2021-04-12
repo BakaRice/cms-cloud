@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -158,6 +159,54 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         int i = userMapper.updateById(removeUser);
         return i == 1;
+    }
+
+    @Override
+    public User selectByUserIdAndCellId(Long userId, Long cellId) {
+        if (userId == null || cellId == null) {
+            throw new PmsServiceException("通过指定机构id和用户id查询用户失败");
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("cell_id", cellId);
+        queryWrapper.eq("id", userId);
+        User user = userMapper.selectOne(queryWrapper);
+        return user;
+    }
+
+    @Override
+    public User selectByUserIdAndInstitutionId(Long userId, Long institutionId) {
+        if (userId == null || institutionId == null) {
+            throw new PmsServiceException("通过指定机构id和用户id查询用户失败");
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("institution_id", institutionId);
+        queryWrapper.eq("id", userId);
+        User user = userMapper.selectOne(queryWrapper);
+        return user;
+    }
+
+    @Override
+    public List<User> selectByCellId(Long cellId) {
+        if (cellId == null) {
+            throw new PmsServiceException("通过指定班组id查询用户失败");
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("cell_id", cellId);
+        queryWrapper.eq("is_delete", 0);
+        List<User> userList = userMapper.selectList(queryWrapper);
+        return userList;
+    }
+
+    @Override
+    public List<User> selectByInstitutionId(Long institutionId) {
+        if (institutionId == null) {
+            throw new PmsServiceException("通过指定机构id查询用户失败");
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("institution_id", institutionId);
+        queryWrapper.eq("is_delete", 0);
+        List<User> userList = userMapper.selectList(queryWrapper);
+        return userList;
     }
 
 

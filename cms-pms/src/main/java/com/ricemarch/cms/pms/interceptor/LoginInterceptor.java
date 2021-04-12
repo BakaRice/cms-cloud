@@ -59,6 +59,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public void setUser(String phone) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", phone);
+        queryWrapper.eq("is_delete", (short) 0);
         //通過phone可以獲取到user時 存儲UserContextHolder
         Optional.ofNullable(userService.getOne(queryWrapper))
                 .ifPresent(user -> {

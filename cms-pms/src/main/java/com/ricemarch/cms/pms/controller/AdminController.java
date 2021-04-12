@@ -1,6 +1,7 @@
 package com.ricemarch.cms.pms.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -15,12 +16,14 @@ import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * admin controller
@@ -47,6 +50,8 @@ public class AdminController extends BaseController {
     CellsService cellService;
     @Autowired
     InstitutionService institutionService;
+    @Autowired
+    SchedulingTypeService schedulingTypeService;
 
 
     @ApiOperation("新增cell")
@@ -210,4 +215,28 @@ public class AdminController extends BaseController {
         return new BaseResponse();
     }
 
+
+    @ApiOperation("新增排班类型 schedules type【TEST-1】")
+    @PostMapping("/schedules")
+    public BaseResponse<Boolean> postSchedules(@Valid @RequestBody ScheduleAddRequest scheduleAddRequest) {
+        SchedulingType schedulingType = scheduleAddRequest.getSchedulingType();
+        boolean save = schedulingTypeService.save(schedulingType);
+        return new BaseResponse<>(save);
+    }
+
+    @ApiOperation("修改排班类型 schedules type【TEST-1】")
+    @PutMapping("/schedules")
+    public BaseResponse<Boolean> putSchedules(@Valid @RequestBody ScheduleAddRequest scheduleAddRequest) {
+        SchedulingType schedulingType = scheduleAddRequest.getSchedulingType();
+        boolean save;
+        Integer id = Optional.ofNullable(schedulingType)
+                .map(SchedulingType::getId)
+                .orElseThrow(() -> new PmsServiceException("参数错误，修改失败"));
+        SchedulingType byId = schedulingTypeService.getById(id);
+
+        Optional.ofNullable(byId).orElseThrow(() -> new PmsServiceException("该排班" + id + "类型不存"));
+
+        save = schedulingTypeService.updateById(schedulingType);
+        return new BaseResponse<>(save);
+    }
 }

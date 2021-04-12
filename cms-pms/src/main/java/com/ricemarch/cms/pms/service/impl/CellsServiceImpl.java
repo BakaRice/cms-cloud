@@ -38,6 +38,7 @@ public class CellsServiceImpl extends ServiceImpl<CellsMapper, Cells> implements
 
     @Autowired
     InstitutionMapper institutionMapper;
+    private long institutionId;
 
     @Override
     public boolean saveCell(CellAddRequest request) {
@@ -68,6 +69,23 @@ public class CellsServiceImpl extends ServiceImpl<CellsMapper, Cells> implements
     public PageInfo<Cells> listCell4Page(CellPageRequest req) {
         PageHelper.startPage(req.getPageNum(), req.getPageSize());
         List<Cells> cellsList = cellsMapper.selectList(Wrappers.emptyWrapper());
+        PageInfo<Cells> cellsPageInfo = new PageInfo<>(cellsList);
+
+        //...
+
+        cellsPageInfo.setStartRow(req.getPageNum());
+        cellsPageInfo.setPageSize(req.getPageSize());
+
+        return cellsPageInfo;
+    }
+
+    @Override
+    public PageInfo<Cells> listCellByInstitution4Page(CellPageRequest req, long institutionId) {
+        this.institutionId = institutionId;
+        PageHelper.startPage(req.getPageNum(), req.getPageSize());
+        QueryWrapper<Cells> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("institution_id", institutionId);
+        List<Cells> cellsList = cellsMapper.selectList(queryWrapper);
         PageInfo<Cells> cellsPageInfo = new PageInfo<>(cellsList);
 
         //...
