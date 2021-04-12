@@ -40,3 +40,27 @@
 4. 库存调整
 5. 库存查询
 6. 出入库记录
+
+
+
+
+---
+
+场景思考：
+
+purchase  --> warehouse(供应商 到 仓库)：采购
+
+warehouse --> purchase(仓库到供应商)：退货
+
+work  --> check -->  warehouse(加工 到 检查 到 仓库)：加工入库
+
+check：外观check，精度check ：查看是否漏序，是否有毛刺，检查精度等
+
+warehouse --> check (仓库 到 检查)：仓库抽检
+
+warehouse --> work （仓库 到 加工）:下游加工
+
+warehouse --> maintain(仓库 到 保全): 维修
+
+
+
