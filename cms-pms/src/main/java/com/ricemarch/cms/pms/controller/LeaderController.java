@@ -1,6 +1,9 @@
 package com.ricemarch.cms.pms.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
+import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.bo.request.admin.CellPageRequest;
 import com.ricemarch.cms.pms.bo.response.UserCommonResponse;
 import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
@@ -18,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,10 +91,49 @@ public class LeaderController extends BaseController {
         return new BaseResponse();
     }
 
-    @ApiOperation("修改 user info 通过userId 进行操作")
-    @PutMapping("/info/{userId}")
-    public BaseResponse postInfo(@RequestBody BaseRequest request, @PathVariable("userId") String userId) {
-        return new BaseResponse();
+    @ApiOperation("修改 user info【TEST-0】 ")
+    @PutMapping("/info")
+    public BaseResponse postInfo(@RequestBody UserUpdateRequest request) {
+        Long id = getUserId();
+        Long userId = request.getUserCommonRequest().getId();
+        Long cellId = getCellId();
+        Integer roleId = getRoleId();
+        Long institutionId = getInstitutionId();
+
+        User user;
+        if (CELL_LEADER_ROLE_ID == roleId) {
+            Optional.ofNullable(cellId).orElseThrow(() -> new PmsServiceException("班组id不能为空"));
+            user = userService.selectByUserIdAndCellId(userId, cellId);
+
+        } else if (INSTITUTION_LEADER_ROLE_ID == roleId) {
+            Optional.ofNullable(institutionId).orElseThrow(() -> new PmsServiceException("机构id不能为空"));
+            user = userService.selectByUserIdAndInstitutionId(userId, institutionId);
+        } else {
+            throw new PmsServiceException("权限不足");
+        }
+
+        if (user == null) {
+            throw new PmsServiceException("当前机构或班组下不存在该用户");
+        }
+        //不能修改的数据 cell inst role profession
+        UserCommonRequest userCommonRequest = request.getUserCommonRequest();
+        userCommonRequest.setUpdateBy(id);
+        userCommonRequest.setUpdateTime(LocalDateTime.now());
+        userCommonRequest.setInstitutionId(institutionId);
+        userCommonRequest.setCellId(cellId);
+        userCommonRequest.setRoleId(user.getRoleId());
+        userCommonRequest.setProfessionId(user.getProfessionId());
+
+        if (null == id) {
+            throw new PmsServiceException("修改用户信息失败");
+        }
+        //以手机号为维度确认唯一性
+        Boolean isSuccess = userService.updateUser(request);
+        if (isSuccess) {
+            return BaseResponse.success("修改用户成功");
+        } else {
+            return BaseResponse.operationFailed("修改用户失败");
+        }
     }
 
     @ApiOperation("根据userId查看leader所属机构内的用户信息【DONE】")
