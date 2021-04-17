@@ -82,4 +82,13 @@ public interface UserService extends IService<User> {
      * @return
      */
     List<User> selectByInstitutionId(Long InstitutionId);
+
+    /**
+     * 通过list of id 查询用户列表
+     *
+     * @return
+     * @param userIdList
+     */
+    List<User> selectByUserIdList(List<Long> userIdList);
+
 }

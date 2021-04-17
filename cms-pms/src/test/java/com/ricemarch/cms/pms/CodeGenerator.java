@@ -27,7 +27,8 @@ public class CodeGenerator {
         String projectPath = System.getProperty("user.dir");
         //Agriculturalproductms
         //D:\tanwentao\project\cms\src\test\java\com\ricemarch\cms
-        gc.setOutputDir(projectPath + "/src/main/java");
+//        gc.setOutputDir(projectPath + "/src/main/java");
+        gc.setOutputDir("E:\\Graduation\\cms-cloud\\cms-pms\\src\\test\\java\\com\\ricemarch\\cms\\pms");
         gc.setAuthor("ricemarch");
         gc.setOpen(false); //生成后是否打开资源管理器
         gc.setFileOverride(false); //重新生成时文件是否覆盖
@@ -42,9 +43,11 @@ public class CodeGenerator {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://test.ricemarch.com:3306/cms_pms? serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false");
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
+//        dsc.setUrl("jdbc:mysql://test.ricemarch.com:3306/cms_pms? serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false");
+        dsc.setUrl("jdbc:postgresql://test.ricemarch.com:5432/cms_pms_pg");
+//        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
+        dsc.setDriverName("org.postgresql.Driver");
+        dsc.setUsername("postgres");
         dsc.setPassword("NEFU");
 //        dsc.setDbType(DateType.ONLY_DATE);
         mpg.setDataSource(dsc);
@@ -61,7 +64,7 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("sys_req_log");
+        strategy.setInclude("scheduling");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 

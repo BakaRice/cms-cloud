@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.Lists;
 import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -207,6 +209,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("is_delete", 0);
         List<User> userList = userMapper.selectList(queryWrapper);
         return userList;
+    }
+
+    @Override
+    public List<User> selectByUserIdList(List<Long> userIdList) {
+        if (CollectionUtils.isEmpty(userIdList)){
+            return Lists.newArrayList();
+        }
+       return userMapper.selectIdList(userIdList);
     }
 
 

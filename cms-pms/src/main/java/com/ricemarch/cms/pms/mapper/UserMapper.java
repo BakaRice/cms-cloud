@@ -2,7 +2,10 @@ package com.ricemarch.cms.pms.mapper;
 
 import com.ricemarch.cms.pms.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +18,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper extends BaseMapper<User> {
 
+    /**
+     * 通过userIdList查询userList
+     *
+     * @param userIdList
+     * @return
+     */
+    List<User> selectIdList(@Param("userIdList") List<Long> userIdList);
 }

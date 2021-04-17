@@ -66,6 +66,7 @@ public class BaseResponse<T> implements Serializable {
         return new BaseResponse(BizErrorCodeEnum.SUCCESS, message);
     }
 
+
     public static <T> BaseResponse<T> success(T data) {
         return new BaseResponse<>(data);
     }
