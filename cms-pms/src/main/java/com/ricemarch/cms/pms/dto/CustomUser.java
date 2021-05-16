@@ -10,4 +10,7 @@ import lombok.Data;
 
 @Data
 public class CustomUser extends BaseUser {
+
+    private String accountStateDesc;
+    private String idString;
 }

@@ -15,4 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UserLoginResponse {
 
     String role;
+
+    Integer roleId;
+
+    String userName;
 }

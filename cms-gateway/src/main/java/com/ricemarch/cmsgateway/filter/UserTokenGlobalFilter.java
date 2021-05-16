@@ -28,8 +28,10 @@ public class UserTokenGlobalFilter implements GlobalFilter, Ordered {
         // 验证token是否有效
         ServerHttpResponse resp = exchange.getResponse();
         Object authorization = exchange.getAttribute("Authorization");
+         authorization = exchange.getAttribute("token");
         List<String> token = exchange.getRequest().getHeaders().get("Authorization");
-        if (!"/cms-pms-service/api/user/login".equals(exchange.getRequest().getPath())) {
+         token = exchange.getRequest().getHeaders().get("token");
+        if (!"/cms-pms-service/api/pms/user/login".equals(exchange.getRequest().getPath().toString())) {
             if (token == null || token.size() == 0 || StringUtils.isBlank(token.get(0))) {
                 return unauthorized(resp, "没有携带Token信息！");
             }

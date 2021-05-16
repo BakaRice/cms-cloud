@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MyToken {
-    public static final String AUTHORIZATION = "Authorization";
+    public static final String AUTHORIZATION = "token";
     public static final String PHONE = "phone";
     public static final String ROLE = "role";
     private String phone;

@@ -32,7 +32,7 @@ import java.util.Optional;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/pms/user")
 public class UserController {
 
     String logClassMsg = "默认用户操作Controller";
@@ -69,7 +69,7 @@ public class UserController {
         String auth = encrypt.encryptToken(token);
         //键值对 不要用硬编码 用常量 避免书写错误等情况
         response.setHeader(MyToken.AUTHORIZATION, auth);
-        UserLoginResponse userLoginResponse = new UserLoginResponse(byId.getName());
+        UserLoginResponse userLoginResponse = new UserLoginResponse(byId.getName(), user.getRoleId(), user.getName());
         return new BaseResponse<>(userLoginResponse);
     }
 

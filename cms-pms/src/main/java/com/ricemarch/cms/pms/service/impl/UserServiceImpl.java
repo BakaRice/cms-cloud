@@ -2,6 +2,8 @@ package com.ricemarch.cms.pms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
@@ -195,6 +197,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("cell_id", cellId);
         queryWrapper.eq("is_delete", 0);
+        queryWrapper.orderByDesc("update_time");
         List<User> userList = userMapper.selectList(queryWrapper);
         return userList;
     }
@@ -207,16 +210,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("institution_id", institutionId);
         queryWrapper.eq("is_delete", 0);
+        queryWrapper.orderByDesc("update_time");
+//        PageHelper.startPage(1, 10);
         List<User> userList = userMapper.selectList(queryWrapper);
+        PageInfo userPageInfo = new PageInfo<>(userList);
+        log.info(userPageInfo.toString());
         return userList;
     }
 
     @Override
     public List<User> selectByUserIdList(List<Long> userIdList) {
-        if (CollectionUtils.isEmpty(userIdList)){
+        if (CollectionUtils.isEmpty(userIdList)) {
             return Lists.newArrayList();
         }
-       return userMapper.selectIdList(userIdList);
+        return userMapper.selectIdList(userIdList);
     }
 
 

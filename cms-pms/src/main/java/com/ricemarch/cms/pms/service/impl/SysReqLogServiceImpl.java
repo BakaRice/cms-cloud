@@ -90,6 +90,7 @@ public class SysReqLogServiceImpl extends ServiceImpl<SysReqLogMapper, SysReqLog
             String phone = myToken.getPhone();
             QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
             queryWrapper.eq("phone", phone);
+            queryWrapper.eq("is_delete", 1);
             Optional.ofNullable(userService.getOne(queryWrapper)).ifPresent(u -> {
                 sysReqLog.setUsername(u.getName());
                 sysReqLog.setUserId(u.getId());

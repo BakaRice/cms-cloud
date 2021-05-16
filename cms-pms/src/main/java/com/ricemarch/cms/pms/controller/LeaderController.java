@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.controller;
 
 import java.sql.Blob;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ricemarch.cms.pms.bo.request.SchedulesUserUpdateRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
@@ -40,7 +41,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/leader")
+@RequestMapping("/api/pms/leader")
 public class LeaderController extends BaseController {
 
 
@@ -76,11 +77,16 @@ public class LeaderController extends BaseController {
         Integer roleId = getRoleId();
 
         List<User> userList;
-
+        ////查询到的pageInfo -> userPageInfo
+        PageInfo<User> userPageInfo = new PageInfo<>();
         if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
+            PageHelper.startPage(pageNum, pageSize);
             userList = userService.selectByCellId(cellId);
+            userPageInfo = new PageInfo<>(userList);
         } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
+            PageHelper.startPage(pageNum, pageSize);
             userList = userService.selectByInstitutionId(institutionId);
+            userPageInfo = new PageInfo<>(userList);
         } else {
             if (null == institutionId) {
                 throw new PmsServiceException(INSTITUTION_ID_NULL);
@@ -92,15 +98,41 @@ public class LeaderController extends BaseController {
         }
 
         List<CustomUser> customUserList = new ArrayList<>();
+
         for (User user : userList) {
             CustomUser customUser = new CustomUser();
             BeanUtils.copyProperties(user, customUser);
+            customUser.setAccountStateDesc(user.getAccountState() == 0 ? "已启用" : "未启用");
+            customUser.setIdString(user.getId().toString());
             customUserList.add(customUser);
         }
-        PageInfo<CustomUser> customUserPageInfo = new PageInfo<>(customUserList);
-        customUserPageInfo.setStartRow(pageNum);
-        customUserPageInfo.setPageSize(pageSize);
+
+        //要返回的pageInfo -> CustomUser
+        PageInfo<CustomUser> customUserPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(userPageInfo, customUserPageInfo);
+        log.info(customUserPageInfo.toString());
+        List<User> list = userPageInfo.getList();
+        List<CustomUser> customUsers = new ArrayList<>();
+        for (User user : list) {
+            CustomUser customUser = new CustomUser();
+            BeanUtils.copyProperties(user, customUser);
+            customUsers.add(customUser);
+        }
+        customUserPageInfo.setList(customUserList);
+
         return new BaseResponse<>(customUserPageInfo);
+    }
+
+    @ApiOperation("LEADER通过userId获取用户")
+    @GetMapping("/user/{userId}")
+    public BaseResponse<UserCommonResponse> getUser(@PathVariable("userId") Long userId) {
+        User user = userService.getById(userId);
+        if (user == null) {
+            return new BaseResponse<>(BizErrorCodeEnum.USER_DOES_NOT_EXISTS);
+        }
+        UserCommonResponse u = new UserCommonResponse();
+        BeanUtils.copyProperties(user, u);
+        return new BaseResponse<>(u);
     }
 
     @ApiOperation("修改 user info list 进行操作")
@@ -118,21 +150,21 @@ public class LeaderController extends BaseController {
         Integer roleId = getRoleId();
         Long institutionId = getInstitutionId();
 
-        User user;
-        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
-            user = userService.selectByUserIdAndCellId(userId, cellId);
-
-        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
-            user = userService.selectByUserIdAndInstitutionId(userId, institutionId);
-        } else {
-            if (cellId == null) {
-                throw new PmsServiceException(CELL_ID_NULL);
-            }
-            if (institutionId == null) {
-                throw new PmsServiceException(INSTITUTION_ID_NULL);
-            }
-            throw new PmsServiceException(PERMISSION_DENIED);
-        }
+        User user = userService.getById(userId);
+//        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
+//            user = userService.selectByUserIdAndCellId(userId, cellId);
+//
+//        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
+//            user = userService.selectByUserIdAndInstitutionId(userId, institutionId);
+//        } else {
+//            if (cellId == null) {
+//                throw new PmsServiceException(CELL_ID_NULL);
+//            }
+//            if (institutionId == null) {
+//                throw new PmsServiceException(INSTITUTION_ID_NULL);
+//            }
+//            throw new PmsServiceException(PERMISSION_DENIED);
+//        }
 
         if (user == null) {
             throw new PmsServiceException("当前机构或班组下不存在该用户");
@@ -312,3 +344,4 @@ public class LeaderController extends BaseController {
     }
 
 }
+

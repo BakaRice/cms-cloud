@@ -81,7 +81,8 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return newArrayList(
-                new SecurityReference("Authorization", authorizationScopes));
+//                new SecurityReference("Authorization", authorizationScopes),
+                new SecurityReference("token", authorizationScopes));
     }
 //设置完成后进入SwaggerUI，右上角出现“Authorization”按钮，点击即可输入我们配置的参数。
 //对于不需要输入参数的接口（上文所述的包含auth的接口），在未输入Authorization参数就可以访问。

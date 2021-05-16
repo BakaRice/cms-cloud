@@ -35,7 +35,7 @@ import java.util.Optional;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/pms/admin")
 public class AdminController extends BaseController {
 
     String logClassMsg = "Admin操作";

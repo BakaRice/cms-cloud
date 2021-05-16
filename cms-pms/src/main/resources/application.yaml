@@ -28,8 +28,10 @@ spring:
     # remote postgres
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: NEFU
-    url: jdbc:postgresql://test.ricemarch.com:5432/cms_pms_pg
+    password: root
+#    password: NEFU
+    url: jdbc:postgresql://127.0.0.1:5432/cms_pms_pg
+#    url: jdbc:postgresql://test.ricemarch.com:5432/cms_pms_pg
 
 
   profiles:

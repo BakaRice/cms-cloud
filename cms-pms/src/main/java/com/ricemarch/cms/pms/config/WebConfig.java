@@ -26,13 +26,13 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/user/login");
+                .addPathPatterns("/api/pms/**")
+                .excludePathPatterns("/api/pms/user/login");
 
         registry.addInterceptor(adminInterceptor)
-                .addPathPatterns("/api/admin/**");
+                .addPathPatterns("/api/pms/admin/**");
 
         registry.addInterceptor(leaderInterceptor)
-                .addPathPatterns("/api/leader/**");
+                .addPathPatterns("/api/pms/leader/**");
     }
 }
