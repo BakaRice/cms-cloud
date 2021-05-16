@@ -1,9 +1,11 @@
 package com.ricemarch.cms.pms.service;
 
+import com.ricemarch.cms.pms.dto.AttendanceDto;
 import com.ricemarch.cms.pms.entity.Attendance;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -16,4 +18,6 @@ import java.time.LocalDate;
 public interface AttendanceService extends IService<Attendance> {
 
     Attendance getByCurrDateAndUid(LocalDate currDate, Long userId);
+
+    List<AttendanceDto> selectDtoListByCellAndInitId(Long institutionId, Long cellId, LocalDate date);
 }

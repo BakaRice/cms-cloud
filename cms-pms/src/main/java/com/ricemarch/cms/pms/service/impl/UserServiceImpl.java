@@ -16,6 +16,7 @@ import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -265,7 +266,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Roster getRosterByCurrDateAndUid(LocalDate currDate, Long userId) {
         //TODO
-        return null;
+        return userMapper.getRosterByCurrDateAndUid(currDate,userId);
     }
 
 

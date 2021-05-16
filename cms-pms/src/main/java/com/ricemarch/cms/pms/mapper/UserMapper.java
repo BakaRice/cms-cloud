@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -37,4 +38,6 @@ public interface UserMapper extends BaseMapper<User> {
     Integer selectRosterDayUserCount(Long cellId, Long InitId);
 
     Integer selectRosterNightUserCount(Long cellId, Long InitId);
+
+    Roster getRosterByCurrDateAndUid(@Param("currDate")LocalDate currDate, @Param("userId")Long userId);
 }

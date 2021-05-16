@@ -4,18 +4,65 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.Attendance">
-        <id column="id" property="id" />
-        <result column="user_id" property="userId" />
-        <result column="schedule_type_id" property="scheduleTypeId" />
-        <result column="start_time" property="startTime" />
-        <result column="end_time" property="endTime" />
-        <result column="status" property="status" />
-        <result column="remark" property="remark" />
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="schedule_type_id" jdbcType="INTEGER" property="scheduleTypeId"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="curr_date" jdbcType="DATE" property="currDate"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, schedule_type_id, start_time, end_time, status, remark
+        id, user_id, schedule_type_id, start_time, end_time, "status", remark, curr_date
     </sql>
+    <select id="getByCurrDateAndUid" resultType="com.ricemarch.cms.pms.entity.Attendance">
+        select *
+        from attendance
+        <where>
+            <if test="currDate">
+                AND curr_date = #{currDate}
+            </if>
+            <if test="userId !=null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </select>
+    <select id="selectDtoListByCellAndInitId" resultType="com.ricemarch.cms.pms.dto.AttendanceDto">
+        -- / 考勤状态(0正常，1迟到，2早退，3旷工，4请假，5出差）
+        select up.id as uid,
+        a.id as id,
+        a.curr_date as currDate,
+        up.name as uName,
+        st.name as sName,
+        a.status as status,
+        case
+        when a.status = 0 then '0正常'
+        when a.status = 1 then '1迟到'
+        when a.status = 2 then '2早退'
+        when a.status = 3 then '3旷工'
+        when a.status = 4 then '4请假'
+        when a.status = 5 then '5出差'
+        else '-1数据异常'
+        END statusName
+        from user_pg up
+        left join attendance as a on up.id = a.user_id and curr_date = #{date}
+        left join scheduling_type st on st.id = a.schedule_type_id
+        <where>
+            <if test="cellId !=null">
+                and up.cell_id =#{cellId}
+            </if>
+            <if test="institutionId != null">
+                and up.institution_id = #{institutionId}
+            </if>
+            or up.id not in (select attendance.user_id
+            from attendance
+            where curr_date = #{date})
+        </where>
+        order by a.id
+
+    </select>
 
 </mapper>

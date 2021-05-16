@@ -118,6 +118,20 @@
         </where>
 
     </select>
+    <select id="getRosterByCurrDateAndUid" resultType="com.ricemarch.cms.pms.dto.Roster">
+        SELECT u.id               as uid,
+               u.name,
+               s.start_time       as startTime,
+               s.end_time         as endTime,
+               s.schedule_type_id as type,
+               t.name             as typeName
+        FROM user_pg u
+                 left join scheduling s on u.id = s.user_id and s.start_time <![CDATA[ <= ]]> current_date and s.end_time
+        <![CDATA[ >= ]]> current_date
+                 left join scheduling_type t on t.id = s.schedule_type_id
+        where u.id = #{userId}
+
+    </select>
 
 
 </mapper>

@@ -1,9 +1,13 @@
 package com.ricemarch.cms.pms.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,14 +18,15 @@ import lombok.EqualsAndHashCode;
  * @since 2021-03-22
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class Attendance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      private String id;
+      private Long id;
 
-    private String userId;
+    private Long userId;
 
     private Integer scheduleTypeId;
 
@@ -38,6 +43,8 @@ public class Attendance implements Serializable {
      * 备注
      */
     private String remark;
+
+    private LocalDate currDate;
 
 
 }

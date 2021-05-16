@@ -8,12 +8,8 @@ import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
 import com.ricemarch.cms.pms.dto.Roster;
-import com.ricemarch.cms.pms.entity.Attendance;
-import com.ricemarch.cms.pms.entity.User;
-import com.ricemarch.cms.pms.entity.UserRole;
-import com.ricemarch.cms.pms.service.AttendanceService;
-import com.ricemarch.cms.pms.service.UserRoleService;
-import com.ricemarch.cms.pms.service.UserService;
+import com.ricemarch.cms.pms.entity.*;
+import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -55,6 +54,9 @@ public class UserController extends BaseController {
 
     @Autowired
     AttendanceService attendanceService;
+
+    @Autowired
+    SchedulingTypeService schedulingTypeService;
 
     @ApiOperation("登录")
     @PostMapping("/login")
@@ -98,22 +100,48 @@ public class UserController extends BaseController {
 
         //获取当前日期
         LocalDate currDate = LocalDate.now();
+        LocalDateTime currTime = LocalDateTime.now();
         //获取当前排班信息 若无排班信息 失败
-        Roster roster = userService.getRosterByCurrDateAndUid(currDate,userId);
-        if (roster==null){
+        Roster roster = userService.getRosterByCurrDateAndUid(currDate, userId);
+        Integer typeId = roster.getType();
+        SchedulingType schedulingType = schedulingTypeService.getById(typeId);
+        if (roster == null) {
             throw new PmsServiceException("没有排班信息");
         }
         //查看有无当前日期的打卡记录
-        Attendance currDateAttendance = attendanceService.getByCurrDateAndUid(currDate,userId);
+        Attendance currDateAttendance = attendanceService.getByCurrDateAndUid(currDate, userId);
         //若有排班类型 无打卡记录 当前时间和上班班时间对比
-        if (currDateAttendance==null){
-
-        }else {
+        if (currDateAttendance == null) {
+            currDateAttendance = new Attendance();
+            currDateAttendance.setScheduleTypeId(roster.getType());
+            LocalTime currLocalUpTime = currTime.toLocalTime();
+            currDateAttendance.setUserId(userId).setStartTime(currTime);
+            //currLocalTime > startTime 迟到
+            if (schedulingType.getStartTime().compareTo(currLocalUpTime) < 0) {
+                currDateAttendance.setStatus(1);
+            } else if (schedulingType.getEndTime().compareTo(currLocalUpTime) < 0) {
+                currDateAttendance.setStatus(3);
+            }
+        } else {
+            if (currDateAttendance.getStatus() == 3) {
+                throw new PmsServiceException("打卡状态已确定");
+            }
             //若有排班类型 有打卡记录 当前时间和下班班时间对比
+            LocalTime currLocalDownTime = currTime.toLocalTime();
+            //currLocalTime < endTime 早退
+            if (schedulingType.getEndTime().compareTo(currLocalDownTime) > 0) {
+                currDateAttendance.setStatus(2);
+            } else {
+                currDateAttendance.setStatus(0);
+            }
+
+
         }
+        currDateAttendance.setCurrDate(LocalDate.now());
+        boolean b = attendanceService.saveOrUpdate(currDateAttendance);
+        log.info("{}", b);
 
-
-        return new BaseResponse();
+        return new BaseResponse(currDateAttendance);
     }
 
     @GetMapping("/info")

@@ -14,10 +14,7 @@ import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
-import com.ricemarch.cms.pms.dto.CustomUser;
-import com.ricemarch.cms.pms.dto.Roster;
-import com.ricemarch.cms.pms.dto.RosterOverview;
-import com.ricemarch.cms.pms.dto.SchedulesDTO;
+import com.ricemarch.cms.pms.dto.*;
 import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -59,6 +56,8 @@ public class LeaderController extends BaseController {
     SchedulingService schedulingService;
     @Autowired
     SchedulingTypeService schedulingTypeService;
+    @Autowired
+    AttendanceService attendanceService;
 
     public static final int CELL_LEADER_ROLE_ID = 6;
     public static final int INSTITUTION_LEADER_ROLE_ID = 5;
@@ -281,10 +280,31 @@ public class LeaderController extends BaseController {
     }
 
     @ApiOperation("查看本机构或部门下的所有员工的考勤列表 PageInfo 以天来计算")
-    @GetMapping("/attendances/{date}")
-    public BaseResponse getAttendance(@PathVariable("date") Date date) {
+    @GetMapping("/attendances")
+    public BaseResponse<PageInfo<AttendanceDto>> getAttendance(@RequestParam @NotNull int pageNum, @RequestParam int pageSize, @RequestParam LocalDate date) {
         //从token中获取
-        return new BaseResponse();
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
+        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
+            PageHelper.startPage(pageNum, pageSize);
+            attendanceDtoList = attendanceService.selectDtoListByCellAndInitId(null, cellId,date);
+        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
+            PageHelper.startPage(pageNum, pageSize);
+            attendanceDtoList = attendanceService.selectDtoListByCellAndInitId(institutionId, null,date);
+        } else {
+            if (null == institutionId) {
+                throw new PmsServiceException(INSTITUTION_ID_NULL);
+            }
+            if (null == cellId) {
+                throw new PmsServiceException(CELL_ID_NULL);
+            }
+            throw new PmsServiceException(PERMISSION_DENIED);
+        }
+        PageInfo<AttendanceDto> attendanceDtoPageInfo = new PageInfo<>(attendanceDtoList);
+        return new BaseResponse<>(attendanceDtoPageInfo);
     }
 
     @ApiOperation("修改某人的某天的考勤")
