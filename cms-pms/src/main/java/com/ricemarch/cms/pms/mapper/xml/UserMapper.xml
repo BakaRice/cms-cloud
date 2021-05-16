@@ -42,15 +42,82 @@
         </foreach>
     </select>
 
-    <!--    <select id="selectIdList" resultType="com.ricemarch.cms.pms.entity.User">-->
-    <!--        select-->
-    <!--        <include refid="Base_Column_List"></include>-->
-    <!--        from user_pg-->
-    <!--        where id in-->
-    <!--        <foreach collection="list" item="userId" open="(" close=")" separator=",">-->
-    <!--            #{userId}-->
-    <!--        </foreach>-->
-    <!--    </select>-->
+    <select id="selectRoster" resultType="com.ricemarch.cms.pms.dto.Roster">
+        SELECT u.id as uid, u.name, s.start_time as startTime, s.end_time as endTime, s.schedule_type_id as type ,
+        t.name as typeName
+        FROM user_pg u
+        left join scheduling s on u.id = s.user_id and s.start_time <![CDATA[ <= ]]> current_date and s.end_time
+        <![CDATA[ >= ]]> current_date
+        left join scheduling_type t on t.id = s.schedule_type_id
+        where 1 = 1
+        <if test="cellId != null ">
+            and u.cell_id = #{cellId}
+        </if>
+        <if test="InitId != null">
+            and u.institution_id = #{InitId}
+        </if>
+        order by s.create_time
+    </select>
+    <select id="selectRosterUserCount" resultType="java.lang.Integer">
+        select count(*) as allUserCount
+        from user_pg
+        where 1=1
+        <if test="cellId != null ">
+            and cell_id = #{cellId}
+        </if>
+        <if test="InitId != null">
+            and institution_id = #{InitId}
+        </if>
+    </select>
+    <select id="selectRosterUnDealUserCount" resultType="java.lang.Integer">
+        SELECT count(*) as UnDealUserCount
+        FROM user_pg u
+        left join scheduling s on u.id = s.user_id and s.start_time <![CDATA[ <= ]]> current_date and s.end_time
+        <![CDATA[ >= ]]> current_date
+        left join scheduling_type t on t.id = s.schedule_type_id
+        <where>
+            <if test="cellId != null ">
+                and u.cell_id = #{cellId}
+            </if>
+            <if test="InitId != null">
+                and u.institution_id = #{InitId}
+            </if>
+            and s.start_time is null;
+        </where>
+    </select>
+    <select id="selectRosterDayUserCount" resultType="java.lang.Integer">
+        SELECT count(*) as DayUserCount
+        FROM user_pg u
+        left join scheduling s on u.id = s.user_id and s.start_time <![CDATA[ <= ]]> current_date and s.end_time
+        <![CDATA[ >= ]]> current_date
+        left join scheduling_type t on t.id = s.schedule_type_id
+        <where>
+            <if test="cellId != null ">
+                and u.cell_id = #{cellId}
+            </if>
+            <if test="InitId != null">
+                and u.institution_id = #{InitId}
+            </if>
+            and s.schedule_type_id=1;
+        </where>
+    </select>
+    <select id="selectRosterNightUserCount" resultType="java.lang.Integer">
+        SELECT count(*) as DayUserCount
+        FROM user_pg u
+        left join scheduling s on u.id = s.user_id and s.start_time <![CDATA[ <= ]]> current_date and s.end_time
+        <![CDATA[ >= ]]> current_date
+        left join scheduling_type t on t.id = s.schedule_type_id
+        <where>
+            <if test="cellId != null ">
+                and u.cell_id = #{cellId}
+            </if>
+            <if test="InitId != null">
+                and u.institution_id = #{InitId}
+            </if>
+            and s.schedule_type_id=2;
+        </where>
+
+    </select>
 
 
 </mapper>

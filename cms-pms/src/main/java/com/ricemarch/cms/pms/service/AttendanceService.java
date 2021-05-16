@@ -3,6 +3,8 @@ package com.ricemarch.cms.pms.service;
 import com.ricemarch.cms.pms.entity.Attendance;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.time.LocalDate;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AttendanceService extends IService<Attendance> {
 
+    Attendance getByCurrDateAndUid(LocalDate currDate, Long userId);
 }

@@ -30,7 +30,7 @@ public class Attendance implements Serializable {
     private LocalDateTime endTime;
 
     /**
-     * 考勤状态(0正常，1迟到，2早退，3旷工）
+     * 考勤状态(0正常，1迟到，2早退，3旷工，4请假，5出差）
      */
     private Integer status;
 

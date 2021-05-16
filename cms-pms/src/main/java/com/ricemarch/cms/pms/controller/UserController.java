@@ -7,8 +7,11 @@ import com.ricemarch.cms.pms.common.component.MyToken;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
+import com.ricemarch.cms.pms.dto.Roster;
+import com.ricemarch.cms.pms.entity.Attendance;
 import com.ricemarch.cms.pms.entity.User;
 import com.ricemarch.cms.pms.entity.UserRole;
+import com.ricemarch.cms.pms.service.AttendanceService;
 import com.ricemarch.cms.pms.service.UserRoleService;
 import com.ricemarch.cms.pms.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -33,7 +37,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/api/pms/user")
-public class UserController {
+public class UserController extends BaseController {
 
     String logClassMsg = "默认用户操作Controller";
 
@@ -48,6 +52,9 @@ public class UserController {
 
     @Autowired
     UserRoleService userRoleService;
+
+    @Autowired
+    AttendanceService attendanceService;
 
     @ApiOperation("登录")
     @PostMapping("/login")
@@ -77,12 +84,35 @@ public class UserController {
     // 考勤的结果 由 schedule 进行排定
     @GetMapping("/attendance")
     public BaseResponse getAttendance() {
-        //从token中获取
         return new BaseResponse();
     }
 
     @PostMapping("/attendance")
     public BaseResponse postAttendance(@RequestBody BaseRequest request) {
+        //从token中获取
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+        Long userId = getUserId();
+//        考勤状态(0正常，1迟到，2早退，3旷工，4请假，5出差）
+
+        //获取当前日期
+        LocalDate currDate = LocalDate.now();
+        //获取当前排班信息 若无排班信息 失败
+        Roster roster = userService.getRosterByCurrDateAndUid(currDate,userId);
+        if (roster==null){
+            throw new PmsServiceException("没有排班信息");
+        }
+        //查看有无当前日期的打卡记录
+        Attendance currDateAttendance = attendanceService.getByCurrDateAndUid(currDate,userId);
+        //若有排班类型 无打卡记录 当前时间和上班班时间对比
+        if (currDateAttendance==null){
+
+        }else {
+            //若有排班类型 有打卡记录 当前时间和下班班时间对比
+        }
+
+
         return new BaseResponse();
     }
 

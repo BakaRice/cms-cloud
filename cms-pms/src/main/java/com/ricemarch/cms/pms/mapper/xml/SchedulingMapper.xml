@@ -32,5 +32,19 @@
             #{userId}
         </foreach>
     </select>
+    <select id="selectRosterList" resultType="com.ricemarch.cms.pms.dto.Roster">
+        select u.id, u.name, s.start_time, s.end_time, s.schedule_type_id, t.name
+        from scheduling s,
+             user_pg as u,
+             scheduling_type as t
+        where 1=1
+        <if test="aLong != null ">
+          and  user_id = #{aLong}
+        </if>
+          and u.id = s.user_id
+          and s.schedule_type_id = t.id
+          and s.is_delete = 0;
+    </select>
+
 
 </mapper>

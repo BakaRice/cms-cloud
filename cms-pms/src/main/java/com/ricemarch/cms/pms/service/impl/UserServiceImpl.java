@@ -9,6 +9,8 @@ import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
+import com.ricemarch.cms.pms.dto.Roster;
+import com.ricemarch.cms.pms.dto.RosterOverview;
 import com.ricemarch.cms.pms.entity.User;
 import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.UserService;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -224,6 +227,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Lists.newArrayList();
         }
         return userMapper.selectIdList(userIdList);
+    }
+
+    @Override
+    public List<Roster> selectCurrentDateRosterByInit(Long institutionId) {
+        if (institutionId == null) {
+            throw new PmsServiceException("通过指定机构id查询用户失败");
+        }
+        return userMapper.selectRoster(null, institutionId);
+    }
+
+    @Override
+    public List<Roster> selectCurrentDateRosterByCell(Long cellId) {
+        if (cellId == null) {
+            throw new PmsServiceException("通过指定班组id查询用户失败");
+        }
+        return userMapper.selectRoster(cellId, null);
+    }
+
+    @Override
+    public RosterOverview selectRosterOverview(Long institutionId, Long cellId) {
+        if (cellId == null && institutionId == null) {
+            throw new PmsServiceException("通过指定班组id查询用户失败");
+        }
+//        if (institutionId == null) {
+//            throw new PmsServiceException("通过指定机构id查询用户失败");
+//        }
+        RosterOverview rosterOverview = new RosterOverview();
+        rosterOverview
+                .setUserCount(userMapper.selectRosterUserCount(cellId, institutionId))
+                .setUnDealUserCount(userMapper.selectRosterUnDealUserCount(cellId, institutionId))
+                .setDayUserCount(userMapper.selectRosterDayUserCount(cellId, institutionId))
+                .setNightUserCount(userMapper.selectRosterNightUserCount(cellId, institutionId));
+        return rosterOverview;
+    }
+
+    @Override
+    public Roster getRosterByCurrDateAndUid(LocalDate currDate, Long userId) {
+        //TODO
+        return null;
     }
 
 

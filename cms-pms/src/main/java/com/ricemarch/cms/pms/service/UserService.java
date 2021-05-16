@@ -2,9 +2,12 @@ package com.ricemarch.cms.pms.service;
 
 import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
+import com.ricemarch.cms.pms.dto.Roster;
+import com.ricemarch.cms.pms.dto.RosterOverview;
 import com.ricemarch.cms.pms.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -91,4 +94,11 @@ public interface UserService extends IService<User> {
      */
     List<User> selectByUserIdList(List<Long> userIdList);
 
+    List<Roster> selectCurrentDateRosterByInit(Long institutionId);
+
+    List<Roster> selectCurrentDateRosterByCell(Long cellId);
+
+    RosterOverview selectRosterOverview(Long institutionId, Long cellId);
+
+    Roster getRosterByCurrDateAndUid(LocalDate currDate, Long userId);
 }

@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.controller;
 
 import java.sql.Blob;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ricemarch.cms.pms.bo.request.SchedulesUserUpdateRequest;
@@ -14,6 +15,8 @@ import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
 import com.ricemarch.cms.pms.dto.CustomUser;
+import com.ricemarch.cms.pms.dto.Roster;
+import com.ricemarch.cms.pms.dto.RosterOverview;
 import com.ricemarch.cms.pms.dto.SchedulesDTO;
 import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.service.*;
@@ -27,10 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * leader controller
@@ -68,7 +68,7 @@ public class LeaderController extends BaseController {
     public static final String PERMISSION_DENIED = "权限拒绝";
 
 
-    @ApiOperation("查看本机构或部门下的所有员工的信息列表 PageInfo【TEST-2】")
+    @ApiOperation("查看本机构或部门下的所有员工的信息列表 PageInfo【TEST-3】")
     @GetMapping("/infos")
     public BaseResponse<PageInfo<CustomUser>> getInfoList(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
         //从token中获取
@@ -121,6 +121,63 @@ public class LeaderController extends BaseController {
         customUserPageInfo.setList(customUserList);
 
         return new BaseResponse<>(customUserPageInfo);
+    }
+
+    @ApiOperation("查看本机构或部门下的所有员工的排班 PageInfo【TEST-0】")
+    @GetMapping("/roster")
+    public BaseResponse<PageInfo<Roster>> getCurrentDateRosterInfoList(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
+        //从token中获取
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+
+        List<Roster> rosterList;
+        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
+            PageHelper.startPage(pageNum, pageSize);
+            rosterList = userService.selectCurrentDateRosterByCell(cellId);
+        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
+            PageHelper.startPage(pageNum, pageSize);
+            rosterList = userService.selectCurrentDateRosterByInit(institutionId);
+        } else {
+            if (null == institutionId) {
+                throw new PmsServiceException(INSTITUTION_ID_NULL);
+            }
+            if (null == cellId) {
+                throw new PmsServiceException(CELL_ID_NULL);
+            }
+            throw new PmsServiceException(PERMISSION_DENIED);
+        }
+        PageInfo<Roster> rosterPageInfo = new PageInfo<>(rosterList);
+
+        return new BaseResponse<>(rosterPageInfo);
+
+    }
+
+    @ApiOperation("【PUSH!】ROSTER-OVERIVEW【TEST-0】")
+    @GetMapping("/roster-overview")
+    public BaseResponse<RosterOverview> getRosterOverview() {
+        //从token中获取
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+
+        RosterOverview rosterOverview = new RosterOverview();
+        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
+
+            rosterOverview = userService.selectRosterOverview(null, cellId);
+        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
+
+            rosterOverview = userService.selectRosterOverview(institutionId, null);
+        } else {
+            if (null == institutionId) {
+                throw new PmsServiceException(INSTITUTION_ID_NULL);
+            }
+            if (null == cellId) {
+                throw new PmsServiceException(CELL_ID_NULL);
+            }
+            throw new PmsServiceException(PERMISSION_DENIED);
+        }
+        return new BaseResponse<>(rosterOverview);
     }
 
     @ApiOperation("LEADER通过userId获取用户")
@@ -270,6 +327,9 @@ public class LeaderController extends BaseController {
         Long createUserId = getUserId();
         LocalDate startTime = request.getStartTime();
         LocalDate endTime = request.getEndTime();
+        if (startTime.compareTo(endTime) > 0) {
+            throw new PmsServiceException("时间输入错误");
+        }
         //获得排班类型 验证排班类型是否存在
         Integer schedulingTypeId = request.getSchedulingTypeId();
         SchedulingType type = schedulingTypeService.getById(schedulingTypeId);
@@ -289,9 +349,26 @@ public class LeaderController extends BaseController {
         }
         //判断是否存在员工已经在当前时间段被排班
         //不在当前排班时间范围内的该员工列表的排班
-        List<Scheduling> userExistList = schedulingService.getUserListByTimeAndUserIdList(startTime, endTime, userIdList);
-        if (userExistList.size() != userCommonRequestList.size()) {
-            return BaseResponse.operationFailed("用户列表存在该时间段已被排班的用户", false);
+        /**
+         * 判断一个员工的排班是否冲突
+         * 把他的所有现有排班取出来 把将要插入的排班插进去 看看会不会冲突
+         */
+        Map<Long, List<Roster>> userExistRosterListMap = schedulingService.getUserExistRosterListByUserIdList(userIdList);
+        for (User user : userList) {
+            Long id = user.getId();
+            List<Roster> rosterList = userExistRosterListMap.get(id);
+            Roster roster = new Roster();
+            roster.setStartTime(startTime);
+            roster.setEndTime(endTime);
+            rosterList.add(roster);
+            Collections.sort(rosterList);
+            for (int i = 1; i < rosterList.size(); i++) {
+                if (rosterList.get(i).getStartTime().compareTo(rosterList.get(i - 1).getEndTime()) <= 0) {
+                    System.out.println("i" + rosterList.get(i).toString());
+                    System.out.println("i-1" + rosterList.get(i - 1).toString());
+                    return BaseResponse.operationFailed("用户列表存在该时间段已被排班的用户", false);
+                }
+            }
         }
         //组装排班列表
         List<Scheduling> schedulingList = new ArrayList<>();
