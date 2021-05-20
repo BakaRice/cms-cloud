@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.WarehouseSpacePartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.WarehouseSpacePart">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="type_code" property="typeCode" />
+        <result column="work_id" property="workId" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="warehouse_id" property="warehouseId" />
+        <result column="status" property="status" />
+        <result column="in_time" property="inTime" />
+        <result column="out_time" property="outTime" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="create_name" property="createName" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_name" property="updateName" />
+        <result column="inbound_id" property="inboundId" />
+        <result column="outbound_id" property="outboundId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, code, type_code, work_id, supplier_id, warehouse_id, status, in_time, out_time, is_delete, create_time, update_time, create_by, create_name, update_by, update_name, inbound_id, outbound_id
+    </sql>
+
+</mapper>

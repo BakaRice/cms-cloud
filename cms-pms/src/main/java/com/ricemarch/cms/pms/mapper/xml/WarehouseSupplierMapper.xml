@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.WarehouseSupplierMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.WarehouseSupplier">
+        <id column="id" property="id" />
+        <result column="supplier_name" property="supplierName" />
+        <result column="supplier_contact" property="supplierContact" />
+        <result column="supplier_phone" property="supplierPhone" />
+        <result column="supplier_type" property="supplierType" />
+        <result column="supplier_status" property="supplierStatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, supplier_name, supplier_contact, supplier_phone, supplier_type, supplier_status
+    </sql>
+
+</mapper>
