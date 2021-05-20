@@ -132,6 +132,47 @@
         where u.id = #{userId}
 
     </select>
+    <select id="selectFindByCellAndInstitutionId" resultType="com.ricemarch.cms.pms.dto.CustomUser">
+        select pg.account_state as accountState,
+        case when pg.account_state = 0 then '已启用'
+        else '未启用' end accountStateDesc,
+        pg.address as address,
+        age,
+        birthday,
+        cell_id as cellId,
+        company_id as companyId,
+        create_by as createBy,
+        create_time,
+        id,
+        id as idString,
+        idcard_number,
+        institution_id,
+        is_delete,
+        mark,
+        name,
+        phone,
+        role_id,
+        salary,
+        update_by as updateBy,
+        update_time,
+        profession_id as professionId
+        from user_pg pg
+        <where>
+            <if test="cellId != null">
+                and pg.cell_id = #{cellId}
+            </if>
+            <if test="InitId != null">
+                and pg.institution_id = #{InitId}
+            </if>
+            <if test="find !=null">
+                and name like concat('%',#{find},'%')
+                or phone like concat('%',#{find},'%')
+                or address like concat('%',#{find},'%')
+                or idcard_number like concat('%',#{find},'%')
+                or mark like concat('%',#{find},'%')
+            </if>
+        </where>
+    </select>
 
 
 </mapper>

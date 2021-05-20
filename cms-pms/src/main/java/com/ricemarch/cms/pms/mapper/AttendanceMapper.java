@@ -23,4 +23,8 @@ public interface AttendanceMapper extends BaseMapper<Attendance> {
     Attendance getByCurrDateAndUid(@Param("currDate")LocalDate currDate,@Param("userId") Long userId);
 
     List<AttendanceDto> selectDtoListByCellAndInitId(@Param("institutionId") Long institutionId, @Param("cellId") Long cellId,@Param("date") LocalDate date);
+
+    int getOverviewCount(@Param("i")int i, @Param("date")LocalDate date);
+
+    int getAllOverview(@Param("date")LocalDate date, @Param("cellId")Long cellId, @Param("institutionId")Long institutionId);
 }

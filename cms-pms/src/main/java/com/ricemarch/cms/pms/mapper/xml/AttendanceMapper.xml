@@ -64,5 +64,23 @@
         order by a.id
 
     </select>
+    <select id="getOverviewCount" resultType="java.lang.Integer">
+        select count(1)
+        from user_pg
+        where id in (select user_id from attendance where curr_date = #{date} and status = #{i});
+    </select>
+    <select id="getAllOverview" resultType="java.lang.Integer">
+        select count(1) from user_pg pg
+        <where>
+            <if test="cellId !=null">
+                and pg.cell_id = #{cellId}
+            </if>
+            <if test="institutionId !=null">
+                and pg.institution_id = #{institutionId}
+            </if>
+--             and is_delete = 0;
+        </where>
+
+    </select>
 
 </mapper>

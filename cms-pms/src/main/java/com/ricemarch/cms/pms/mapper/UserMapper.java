@@ -1,7 +1,7 @@
 package com.ricemarch.cms.pms.mapper;
 
+import com.ricemarch.cms.pms.dto.CustomUser;
 import com.ricemarch.cms.pms.dto.Roster;
-import com.ricemarch.cms.pms.dto.RosterOverview;
 import com.ricemarch.cms.pms.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -40,4 +40,6 @@ public interface UserMapper extends BaseMapper<User> {
     Integer selectRosterNightUserCount(Long cellId, Long InitId);
 
     Roster getRosterByCurrDateAndUid(@Param("currDate")LocalDate currDate, @Param("userId")Long userId);
+
+    List<CustomUser> selectFindByCellAndInstitutionId(@Param("cellId") Long cellId, @Param("InitId") Long InitId,  @Param("find") String find);
 }

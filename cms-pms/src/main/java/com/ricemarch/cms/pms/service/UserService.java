@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.service;
 
 import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
+import com.ricemarch.cms.pms.dto.CustomUser;
 import com.ricemarch.cms.pms.dto.Roster;
 import com.ricemarch.cms.pms.dto.RosterOverview;
 import com.ricemarch.cms.pms.entity.User;
@@ -101,4 +102,8 @@ public interface UserService extends IService<User> {
     RosterOverview selectRosterOverview(Long institutionId, Long cellId);
 
     Roster getRosterByCurrDateAndUid(LocalDate currDate, Long userId);
+
+    List<CustomUser> selectFindByCellId(Long cellId, String find);
+
+    List<CustomUser> selectFindByInstitutionId(Long institutionId, String find);
 }

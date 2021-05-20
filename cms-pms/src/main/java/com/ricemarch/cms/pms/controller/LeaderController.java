@@ -122,7 +122,36 @@ public class LeaderController extends BaseController {
         return new BaseResponse<>(customUserPageInfo);
     }
 
-    @ApiOperation("查看本机构或部门下的所有员工的排班 PageInfo【TEST-0】")
+    @ApiOperation("【PUSH!】查看本机构或部门下的符合条件的员工信息列表 PageInfo")
+    @GetMapping("/info")
+    public BaseResponse<PageInfo<CustomUser>> getInfoListBySelect(@RequestParam @NotNull int pageNum, @RequestParam int pageSize,@RequestParam String find){
+        //从token中获取
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+
+        List<CustomUser> customUserList = new ArrayList<>();
+
+        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
+            PageHelper.startPage(pageNum, pageSize);
+            customUserList = userService.selectFindByCellId(cellId,find);
+        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
+            PageHelper.startPage(pageNum, pageSize);
+            customUserList = userService.selectFindByInstitutionId(institutionId,find);
+        } else {
+            if (null == institutionId) {
+                throw new PmsServiceException(INSTITUTION_ID_NULL);
+            }
+            if (null == cellId) {
+                throw new PmsServiceException(CELL_ID_NULL);
+            }
+            throw new PmsServiceException(PERMISSION_DENIED);
+        }
+        PageInfo<CustomUser> customUserPageInfo = new PageInfo<>(customUserList);
+        return new BaseResponse<>(customUserPageInfo);
+    }
+
+    @ApiOperation("【PUSH!】查看本机构或部门下的所有员工的排班 PageInfo【TEST-0】")
     @GetMapping("/roster")
     public BaseResponse<PageInfo<Roster>> getCurrentDateRosterInfoList(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
         //从token中获取
@@ -179,7 +208,7 @@ public class LeaderController extends BaseController {
         return new BaseResponse<>(rosterOverview);
     }
 
-    @ApiOperation("LEADER通过userId获取用户")
+    @ApiOperation("【PUSH!】LEADER通过userId获取用户")
     @GetMapping("/user/{userId}")
     public BaseResponse<UserCommonResponse> getUser(@PathVariable("userId") Long userId) {
         User user = userService.getById(userId);
@@ -279,7 +308,7 @@ public class LeaderController extends BaseController {
         return new BaseResponse<>(u);
     }
 
-    @ApiOperation("查看本机构或部门下的所有员工的考勤列表 PageInfo 以天来计算")
+    @ApiOperation("【PUSH!】查看本机构或部门下的所有员工的考勤列表 PageInfo 以天来计算【TEST-0】")
     @GetMapping("/attendances")
     public BaseResponse<PageInfo<AttendanceDto>> getAttendance(@RequestParam @NotNull int pageNum, @RequestParam int pageSize, @RequestParam LocalDate date) {
         //从token中获取
@@ -290,10 +319,10 @@ public class LeaderController extends BaseController {
         List<AttendanceDto> attendanceDtoList = new ArrayList<>();
         if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
             PageHelper.startPage(pageNum, pageSize);
-            attendanceDtoList = attendanceService.selectDtoListByCellAndInitId(null, cellId,date);
+            attendanceDtoList = attendanceService.selectDtoListByCellAndInitId(null, cellId, date);
         } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
             PageHelper.startPage(pageNum, pageSize);
-            attendanceDtoList = attendanceService.selectDtoListByCellAndInitId(institutionId, null,date);
+            attendanceDtoList = attendanceService.selectDtoListByCellAndInitId(institutionId, null, date);
         } else {
             if (null == institutionId) {
                 throw new PmsServiceException(INSTITUTION_ID_NULL);
@@ -305,6 +334,17 @@ public class LeaderController extends BaseController {
         }
         PageInfo<AttendanceDto> attendanceDtoPageInfo = new PageInfo<>(attendanceDtoList);
         return new BaseResponse<>(attendanceDtoPageInfo);
+    }
+
+    @ApiOperation("【PUSH!】某日 考勤 overview")
+    @GetMapping("/attendances-overview")
+    public BaseResponse<AttendancesOverview> getAttendanceOverview(@RequestParam LocalDate date) {
+        //从token中获取
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+        AttendancesOverview attendancesOverview = attendanceService.getOverviewByDate(date, institutionId, cellId);
+        return new BaseResponse<>(attendancesOverview);
     }
 
     @ApiOperation("修改某人的某天的考勤")

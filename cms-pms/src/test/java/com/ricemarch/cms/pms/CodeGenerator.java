@@ -44,11 +44,11 @@ public class CodeGenerator {
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
 //        dsc.setUrl("jdbc:mysql://test.ricemarch.com:3306/cms_pms? serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false");
-        dsc.setUrl("jdbc:postgresql://test.ricemarch.com:5432/cms_pms_pg");
+        dsc.setUrl("jdbc:postgresql://127.0.0.1:5432/cms_pms_pg");
 //        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setDriverName("org.postgresql.Driver");
         dsc.setUsername("postgres");
-        dsc.setPassword("NEFU");
+        dsc.setPassword("root");
 //        dsc.setDbType(DateType.ONLY_DATE);
         mpg.setDataSource(dsc);
 
@@ -64,7 +64,7 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("scheduling");
+        strategy.setInclude("warehouse_space_part");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 

@@ -1,6 +1,7 @@
 package com.ricemarch.cms.pms.service;
 
 import com.ricemarch.cms.pms.dto.AttendanceDto;
+import com.ricemarch.cms.pms.dto.AttendancesOverview;
 import com.ricemarch.cms.pms.entity.Attendance;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +21,6 @@ public interface AttendanceService extends IService<Attendance> {
     Attendance getByCurrDateAndUid(LocalDate currDate, Long userId);
 
     List<AttendanceDto> selectDtoListByCellAndInitId(Long institutionId, Long cellId, LocalDate date);
+
+    AttendancesOverview getOverviewByDate(LocalDate date,Long institutionId, Long cellId);
 }

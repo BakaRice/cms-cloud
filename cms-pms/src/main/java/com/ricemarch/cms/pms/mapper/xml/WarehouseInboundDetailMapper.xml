@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.WarehouseInboundDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.WarehouseInboundDetail">
+        <id column="id" property="id" />
+        <result column="warehouse_inbound_id" property="warehouseInboundId" />
+        <result column="cargo_name" property="cargoName" />
+        <result column="cargo_supplier_id" property="cargoSupplierId" />
+        <result column="cargo_type" property="cargoType" />
+        <result column="cargo_code" property="cargoCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, warehouse_inbound_id, cargo_name, cargo_supplier_id, cargo_type, cargo_code
+    </sql>
+
+</mapper>

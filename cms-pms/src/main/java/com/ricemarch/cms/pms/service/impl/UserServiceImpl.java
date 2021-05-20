@@ -2,13 +2,13 @@ package com.ricemarch.cms.pms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
+import com.ricemarch.cms.pms.dto.CustomUser;
 import com.ricemarch.cms.pms.dto.Roster;
 import com.ricemarch.cms.pms.dto.RosterOverview;
 import com.ricemarch.cms.pms.entity.User;
@@ -16,7 +16,6 @@ import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -265,8 +264,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Roster getRosterByCurrDateAndUid(LocalDate currDate, Long userId) {
-        //TODO
         return userMapper.getRosterByCurrDateAndUid(currDate,userId);
+    }
+
+    @Override
+    public List<CustomUser> selectFindByCellId(Long cellId, String find) {
+        return userMapper.selectFindByCellAndInstitutionId(cellId,null,find);
+    }
+
+    @Override
+    public List<CustomUser> selectFindByInstitutionId(Long institutionId, String find) {
+        return userMapper.selectFindByCellAndInstitutionId(null,institutionId,find);
     }
 
 
