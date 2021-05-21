@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.MakePartProcessMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.MakePartProcess">
+        <id column="id" property="id" />
+        <result column="work_id" property="workId" />
+        <result column="status" property="status" />
+        <result column="code_id" property="codeId" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="finish_time" property="finishTime" />
+        <result column="flow_code" property="flowCode" />
+        <result column="done" property="done" />
+        <result column="test_id" property="testId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, work_id, status, code_id, start_time, end_time, finish_time, flow_code, done, test_id
+    </sql>
+
+</mapper>
