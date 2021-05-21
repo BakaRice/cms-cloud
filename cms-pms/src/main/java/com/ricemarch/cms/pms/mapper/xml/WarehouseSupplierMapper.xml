@@ -4,17 +4,26 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.WarehouseSupplier">
-        <id column="id" property="id" />
-        <result column="supplier_name" property="supplierName" />
-        <result column="supplier_contact" property="supplierContact" />
-        <result column="supplier_phone" property="supplierPhone" />
-        <result column="supplier_type" property="supplierType" />
-        <result column="supplier_status" property="supplierStatus" />
+        <id column="id" property="id"/>
+        <result column="supplier_name" property="supplierName"/>
+        <result column="supplier_contact" property="supplierContact"/>
+        <result column="supplier_phone" property="supplierPhone"/>
+        <result column="supplier_type" property="supplierType"/>
+        <result column="supplier_status" property="supplierStatus"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, supplier_name, supplier_contact, supplier_phone, supplier_type, supplier_status
     </sql>
+    <select id="getSupplierList" resultType="com.ricemarch.cms.pms.entity.WarehouseSupplier">
+        -- 查询备件表中所有的供应商
+        select id, supplier_name, supplier_contact, supplier_phone, supplier_type, supplier_status
+        from warehouse_supplier ws
+        where ws.id in (
+            select distinct wp.supplier_id
+            from warehouse_part wp)
+    </select>
+
 
 </mapper>

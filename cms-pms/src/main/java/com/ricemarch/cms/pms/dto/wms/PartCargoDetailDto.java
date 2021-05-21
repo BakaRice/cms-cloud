@@ -1,28 +1,24 @@
-package com.ricemarch.cms.pms.entity;
+package com.ricemarch.cms.pms.dto.wms;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.io.Serializable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- * 仓库备件记录
- * </p>
- *
- * @author ricemarch
- * @since 2021-05-20
+ * @author RiceMarch
+ * @date 2021/5/21 9:13
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class WarehouseSpacePart implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-      private Long id;
+@Slf4j
+@Accessors(chain = true)
+public class PartCargoDetailDto {
+    private Long id;
 
     /**
-     * 备件名称
+     * 零件名称
      */
     private String name;
 
@@ -32,10 +28,14 @@ public class WarehouseSpacePart implements Serializable {
     private String code;
 
     /**
-     * 备件类型编号
+     * 零件类型编号
      */
+    @TableField("type_code")
     private Integer typeCode;
 
+    /**
+     * 零件加工编号 （毛胚没有）
+     */
     private Long workId;
 
     /**
@@ -48,6 +48,9 @@ public class WarehouseSpacePart implements Serializable {
      */
     private Long warehouseId;
 
+    /**
+     * 毛胚0 成品1 废品2
+     */
     private Long status;
 
     /**
@@ -74,9 +77,9 @@ public class WarehouseSpacePart implements Serializable {
 
     private String updateName;
 
-    private Long inboundId;
+    private Long inboudId;
 
-    private Long outboundId;
+    private Long outboudId;
 
-
+    private String supplierName;
 }

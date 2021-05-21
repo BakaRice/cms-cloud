@@ -12,8 +12,10 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class SunburstItem {
+public class SunburstItem<T> {
     private String name;
     private ItemStyle itemStyle;
+    private T data;
+    private Integer value =1;
     private List<SunburstItem> children;
 }

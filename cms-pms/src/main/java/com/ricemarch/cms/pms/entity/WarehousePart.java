@@ -36,8 +36,8 @@ public class WarehousePart implements Serializable {
     /**
      * 零件类型编号
      */
-    @TableField("typeCode")
-    private Integer typecode;
+    @TableField("type_code")
+    private Integer typeCode;
 
     /**
      * 零件加工编号 （毛胚没有）

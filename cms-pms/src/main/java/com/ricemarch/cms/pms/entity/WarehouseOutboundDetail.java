@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ricemarch
@@ -19,11 +19,11 @@ public class WarehouseOutboundDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      private Long id;
+    private Long id;
 
-    private Integer warehouseOutboundId;
+    private Long warehouseOutboundId;
 
-    private Long cargoName;
+    private String cargoName;
 
     private Long cargoSupplierId;
 

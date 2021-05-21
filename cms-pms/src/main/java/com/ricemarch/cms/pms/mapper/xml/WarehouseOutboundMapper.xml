@@ -4,17 +4,30 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.WarehouseOutbound">
-        <id column="id" property="id" />
-        <result column="warehouse_id" property="warehouseId" />
-        <result column="count" property="count" />
-        <result column="create_by" property="createBy" />
-        <result column="create_name" property="createName" />
-        <result column="create_time" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="count" property="count"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, warehouse_id, count, create_by, create_name, create_time
     </sql>
+    <update id="outByIdList">
+        update warehouse_part wp
+        set out_time = current_timestamp,
+        outboud_id = #{oid},
+        update_time = current_timestamp,
+        update_by= #{uid},
+        update_name=#{userName}
+        where wp.code in
+        <foreach collection="cargoCodeList" item="cargoCode" open="(" close=")" separator=",">
+            #{cargoCode}
+        </foreach>
+    </update>
+
 
 </mapper>

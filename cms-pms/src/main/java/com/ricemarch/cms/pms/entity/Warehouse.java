@@ -19,11 +19,11 @@ public class Warehouse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      private Long id;
+    private Long id;
 
-    private Integer warehouseName;
+    private String warehouseName;
 
-    private Integer warehouseCode;
+    private String warehouseCode;
 
     private Long warehouseOwner;
 
@@ -31,7 +31,7 @@ public class Warehouse implements Serializable {
 
     private String warehouseOwnerPhone;
 
-    private Integer warehouseAddress;
+    private String warehouseAddress;
 
     /**
      * 仓库状态 0启用 1停用 ...

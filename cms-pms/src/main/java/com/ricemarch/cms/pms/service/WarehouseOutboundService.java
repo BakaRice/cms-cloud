@@ -3,6 +3,8 @@ package com.ricemarch.cms.pms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ricemarch.cms.pms.entity.WarehouseOutbound;
 
+import java.util.List;
+
 /**
  * <p>
  * 仓库出库单 服务类
@@ -13,4 +15,5 @@ import com.ricemarch.cms.pms.entity.WarehouseOutbound;
  */
 public interface WarehouseOutboundService extends IService<WarehouseOutbound> {
 
+    int outByIdList(List<String> cargoCodeList, Long oid, String userName, Long uid);
 }
