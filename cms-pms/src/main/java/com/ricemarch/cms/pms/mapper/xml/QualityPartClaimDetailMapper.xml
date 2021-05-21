@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricemarch.cms.pms.mapper.QualityPartClaimDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.QualityPartClaimDetail">
+        <id column="id" property="id" />
+        <result column="claim_id" property="claimId" />
+        <result column="detail_name" property="detailName" />
+        <result column="detail_min" property="detailMin" />
+        <result column="detail_max" property="detailMax" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, claim_id, detail_name, detail_min, detail_max
+    </sql>
+
+</mapper>
