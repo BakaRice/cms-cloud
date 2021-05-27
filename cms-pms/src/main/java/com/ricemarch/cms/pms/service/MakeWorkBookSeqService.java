@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.service;
 
 import com.ricemarch.cms.pms.entity.MakeWorkBookSeq;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MakeWorkBookSeqService extends IService<MakeWorkBookSeq> {
 
+    MakeWorkBookSeq getByName( String sequenceName, String partName);
+
+    MakeWorkBookSeq getInitSeqByPartCode(String code);
 }

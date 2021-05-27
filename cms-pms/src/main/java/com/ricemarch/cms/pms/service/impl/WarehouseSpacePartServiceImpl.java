@@ -38,7 +38,8 @@ public class WarehouseSpacePartServiceImpl extends ServiceImpl<WarehouseSpacePar
             String rc = ColorUtils.rc(r, g, b, r1, g1, b1);
             SunburstItem<WarehouseSpacePart> item = new SunburstItem<>();
             item.setChildren(null);
-            item.setName("备件" + name);
+            //"备件" + name
+            item.setName(name);
             item.setItemStyle(new ItemStyle(rc));
 //            item.setValue(++i);
 //            item.setData(warehouseSpacePart);
@@ -55,7 +56,8 @@ public class WarehouseSpacePartServiceImpl extends ServiceImpl<WarehouseSpacePar
         for (WarehouseSupplier warehouseSupplier : warehouseSuppliers) {
             String rc = ColorUtils.rc(r, g, b, r1, g1, b1);
             SunburstItem<WarehouseSupplier> sunburstItem = new SunburstItem<>();
-            sunburstItem.setName("备件SP" + warehouseSupplier.getSupplierName());
+//            "备件SP" + warehouseSupplier.getSupplierName()
+            sunburstItem.setName(warehouseSupplier.getSupplierName());
             sunburstItem.setItemStyle(new ItemStyle(rc));
             sunburstItem.setData(warehouseSupplier);
 //            sunburstItem.setValue(++i);

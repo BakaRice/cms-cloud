@@ -7,7 +7,7 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="code" property="code"/>
-        <result column="typeCode" property="typecode"/>
+        <result column="typeCode" property="typeCode"/>
         <result column="work_id" property="workId"/>
         <result column="supplier_id" property="supplierId"/>
         <result column="warehouse_id" property="warehouseId"/>
@@ -57,6 +57,12 @@
         <foreach collection="cargoCodeList" item="cargoCode" open="(" close=")" separator=",">
             #{cargoCode}
         </foreach>
+    </select>
+    <select id="getByName" resultType="com.ricemarch.cms.pms.entity.WarehousePart">
+        select *
+        from warehouse_part
+        where name = #{partName}
+        limit 1
     </select>
 
 </mapper>

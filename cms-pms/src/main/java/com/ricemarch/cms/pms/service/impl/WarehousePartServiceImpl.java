@@ -46,7 +46,8 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
         for (WarehouseSupplier warehouseSupplier : warehouseSuppliers) {
             String rc = ColorUtils.rc(r, g, b, r1, g1, b1);
             SunburstItem<WarehouseSupplier> sunburstItem = new SunburstItem<>();
-            sunburstItem.setName("零件SP" + warehouseSupplier.getSupplierName());
+            //"零件SP" + warehouseSupplier.getSupplierName()
+            sunburstItem.setName(warehouseSupplier.getSupplierName());
             sunburstItem.setItemStyle(new ItemStyle(rc));
             sunburstItem.setData(warehouseSupplier);
 //            sunburstItem.setValue(++i);
@@ -57,7 +58,7 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
     }
 
     @Override
-    public List<SunburstItem> getTypeListBySpId(Long spId,int r, int g, int b, int r1, int g1, int b1) {
+    public List<SunburstItem> getTypeListBySpId(Long spId, int r, int g, int b, int r1, int g1, int b1) {
         List<String> typeListBySpId = warehousePartMapper.getTypeListBySpId(spId);
         List<SunburstItem> list = new ArrayList<>();
         int i = 0;
@@ -65,7 +66,8 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
             String rc = ColorUtils.rc(r, g, b, r1, g1, b1);
             SunburstItem<WarehouseSpacePart> item = new SunburstItem<>();
             item.setChildren(null);
-            item.setName("零件" + name);
+            //"零件" + name
+            item.setName(name);
             item.setItemStyle(new ItemStyle(rc));
 //            item.setValue(++i);
 //            item.setData(warehouseSpacePart);
@@ -87,5 +89,11 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
     @Override
     public int getByCodeListAndNoOut(List<String> cargoCodeList) {
         return warehousePartMapper.getByCodeListAndNoOut(cargoCodeList);
+    }
+
+    @Override
+    public WarehousePart getByName(String partName) {
+        WarehousePart warehousePart = warehousePartMapper.getByName(partName);
+        return warehousePart;
     }
 }

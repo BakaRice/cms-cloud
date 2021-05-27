@@ -28,4 +28,6 @@ public interface WarehousePartService extends IService<WarehousePart> {
     List<PartCargoDetailDto> getCargoDetailByPartName(String partName);
 
     int getByCodeListAndNoOut(List<String> cargoCodeList);
+
+    WarehousePart getByName(String partName);
 }

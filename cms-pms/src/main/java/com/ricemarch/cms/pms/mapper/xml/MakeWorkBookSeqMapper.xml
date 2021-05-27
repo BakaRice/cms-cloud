@@ -4,14 +4,27 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.MakeWorkBookSeq">
-        <id column="id" property="id" />
-        <result column="code" property="code" />
-        <result column="name" property="name" />
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, code, name
     </sql>
+    <select id="getByName" resultType="com.ricemarch.cms.pms.entity.MakeWorkBookSeq">
+        select *
+        from make_work_book_seq
+        where name = #{sequenceName}
+          and code = #{partName}
+    </select>
+    <select id="getInitSeqByPartCode" resultType="com.ricemarch.cms.pms.entity.MakeWorkBookSeq">
+        select distinct mws.*
+        from make_work_book_seq mws
+                 left join warehouse_part wp on mws.code = wp.name
+        where value = 1
+          and wp.code = #{code}
+    </select>
 
 </mapper>

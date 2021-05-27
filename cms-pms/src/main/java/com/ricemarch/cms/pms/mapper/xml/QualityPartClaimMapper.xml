@@ -4,14 +4,20 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.QualityPartClaim">
-        <id column="id" property="id" />
-        <result column="part_name" property="partName" />
-        <result column="level" property="level" />
+        <id column="id" property="id"/>
+        <result column="part_name" property="partName"/>
+        <result column="level" property="level"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, part_name, level
     </sql>
+    <select id="getLevelByPartCode" resultType="java.lang.String">
+        select qpc.level
+        from quality_part_claim qpc
+                 left join warehouse_part wp on wp.name = qpc.part_name
+        where wp.code = #{code}
+    </select>
 
 </mapper>

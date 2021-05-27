@@ -93,7 +93,7 @@ public class ExceptionController {
      * @return
      */
     @ExceptionHandler(PmsServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     public BaseResponse handleCustomException(PmsServiceException exception) {
         return BaseResponse.operationFailed(exception.getErrorMessage());
     }

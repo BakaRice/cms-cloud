@@ -29,5 +29,7 @@ public class MakeUserRecord implements Serializable {
 
     private Long seqId;
 
+    private String userName;
+
 
 }

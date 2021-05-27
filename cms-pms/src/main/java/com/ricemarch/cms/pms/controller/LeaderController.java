@@ -2,6 +2,7 @@ package com.ricemarch.cms.pms.controller;
 
 import java.sql.Blob;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -9,6 +10,7 @@ import com.ricemarch.cms.pms.bo.request.SchedulesUserUpdateRequest;
 import com.ricemarch.cms.pms.bo.request.UserCommonRequest;
 import com.ricemarch.cms.pms.bo.request.UserUpdateRequest;
 import com.ricemarch.cms.pms.bo.request.admin.CellPageRequest;
+import com.ricemarch.cms.pms.bo.request.admin.UserAddRequest;
 import com.ricemarch.cms.pms.bo.response.UserCommonResponse;
 import com.ricemarch.cms.pms.common.enums.BizErrorCodeEnum;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -65,6 +68,34 @@ public class LeaderController extends BaseController {
     public static final String CELL_ID_NULL = "班组id不能为空";
     public static final String INSTITUTION_ID_NULL = "机构id不能为空";
     public static final String PERMISSION_DENIED = "权限拒绝";
+
+    @ApiOperation("获取cell和institution 列表")
+    @GetMapping("/cellAndInstitution")
+    public BaseResponse<CellAndInstitutionDto> postCellAndInstitution() {
+        CellAndInstitutionDto dto = new CellAndInstitutionDto();
+
+        dto.setInstitutionList(institutionService.list())
+                .setCellsList(cellService.list())
+                .setRoleList(roleService.list());
+        return new BaseResponse<>(dto);
+    }
+
+    @ApiOperation("新增用户")
+    @PostMapping("/user")
+    public BaseResponse postUser(@Valid @RequestBody UserAddRequest request) {
+        String method = "postInfo";
+        Long createUserId = getUserId();
+
+        request.getUserCommonRequest().setCreateBy(createUserId);
+        request.getUserCommonRequest().setUpdateBy(createUserId);
+        log.info(method + "request:{}", JSON.toJSONString(request));
+        Boolean isSuccess = userService.saveUser(request);
+        if (isSuccess) {
+            return BaseResponse.success("新增用户成功");
+        } else {
+            return BaseResponse.operationFailed("新增用户失败");
+        }
+    }
 
 
     @ApiOperation("查看本机构或部门下的所有员工的信息列表 PageInfo【TEST-3】")
@@ -124,7 +155,7 @@ public class LeaderController extends BaseController {
 
     @ApiOperation("【PUSH!】查看本机构或部门下的符合条件的员工信息列表 PageInfo")
     @GetMapping("/info")
-    public BaseResponse<PageInfo<CustomUser>> getInfoListBySelect(@RequestParam @NotNull int pageNum, @RequestParam int pageSize,@RequestParam String find){
+    public BaseResponse<PageInfo<CustomUser>> getInfoListBySelect(@RequestParam @NotNull int pageNum, @RequestParam int pageSize, @RequestParam String find) {
         //从token中获取
         Long cellId = getCellId();
         Long institutionId = getInstitutionId();
@@ -134,10 +165,10 @@ public class LeaderController extends BaseController {
 
         if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
             PageHelper.startPage(pageNum, pageSize);
-            customUserList = userService.selectFindByCellId(cellId,find);
+            customUserList = userService.selectFindByCellId(cellId, find);
         } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
             PageHelper.startPage(pageNum, pageSize);
-            customUserList = userService.selectFindByInstitutionId(institutionId,find);
+            customUserList = userService.selectFindByInstitutionId(institutionId, find);
         } else {
             if (null == institutionId) {
                 throw new PmsServiceException(INSTITUTION_ID_NULL);
@@ -236,20 +267,6 @@ public class LeaderController extends BaseController {
         Long institutionId = getInstitutionId();
 
         User user = userService.getById(userId);
-//        if (CELL_LEADER_ROLE_ID == roleId && null != cellId) {
-//            user = userService.selectByUserIdAndCellId(userId, cellId);
-//
-//        } else if (INSTITUTION_LEADER_ROLE_ID == roleId && null != institutionId) {
-//            user = userService.selectByUserIdAndInstitutionId(userId, institutionId);
-//        } else {
-//            if (cellId == null) {
-//                throw new PmsServiceException(CELL_ID_NULL);
-//            }
-//            if (institutionId == null) {
-//                throw new PmsServiceException(INSTITUTION_ID_NULL);
-//            }
-//            throw new PmsServiceException(PERMISSION_DENIED);
-//        }
 
         if (user == null) {
             throw new PmsServiceException("当前机构或班组下不存在该用户");
@@ -260,9 +277,6 @@ public class LeaderController extends BaseController {
         userCommonRequest.setUpdateTime(LocalDateTime.now());
         userCommonRequest.setInstitutionId(institutionId);
         userCommonRequest.setCellId(cellId);
-        userCommonRequest.setRoleId(user.getRoleId());
-        userCommonRequest.setProfessionId(user.getProfessionId());
-
         if (null == id) {
             throw new PmsServiceException("修改用户信息失败");
         }

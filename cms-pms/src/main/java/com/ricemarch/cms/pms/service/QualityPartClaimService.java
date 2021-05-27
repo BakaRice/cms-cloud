@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface QualityPartClaimService extends IService<QualityPartClaim> {
 
+    String getByPartCode(String code);
 }

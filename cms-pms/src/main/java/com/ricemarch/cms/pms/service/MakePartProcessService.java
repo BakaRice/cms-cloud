@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MakePartProcessService extends IService<MakePartProcess> {
 
+    MakePartProcess findByCode(String code);
 }

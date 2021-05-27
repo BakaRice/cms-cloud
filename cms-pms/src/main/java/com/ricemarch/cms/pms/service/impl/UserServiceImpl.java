@@ -93,7 +93,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //初始化密码为手机号 并进行加密
         user.setPassword(encoder.encode(user.getPhone()));
         user.setId(null);
-
+        user.setCompanyId(0L);
         log.info(logMsg + "user:{}", JSON.toJSONString(user));
         int insert = userMapper.insert(user);
         return insert == 1;

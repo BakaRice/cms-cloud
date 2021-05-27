@@ -31,7 +31,22 @@ spring:
     password: root
 #    password: NEFU
     url: jdbc:postgresql://127.0.0.1:5432/cms_pms_pg
-#    url: jdbc:postgresql://test.ricemarch.com:5432/cms_pms_pg
+    type: com.alibaba.druid.pool.DruidDataSource  # 使用 DruidDataSource作为数据源
+    druid:
+      initial-size: 1
+      min-idle: 1
+      max-active: 80
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      validation-query: select 1 from user_pg
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      keep-alive: true
+
 
 
   profiles:

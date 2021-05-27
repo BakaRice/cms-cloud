@@ -68,7 +68,6 @@ public class UserController extends BaseController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
         }
 
-
         User user = Optional.ofNullable(login)
                 .filter(u -> encoder.matches(userLoginRequest.getPassword(), u.getPassword()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
