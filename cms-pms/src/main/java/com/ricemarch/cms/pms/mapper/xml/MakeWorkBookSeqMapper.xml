@@ -26,5 +26,33 @@
         where value = 1
           and wp.code = #{code}
     </select>
+    <select id="getPartWithMakeInfo" resultType="com.ricemarch.cms.pms.controller.PartSeqDto">
+        -- 用于查找所有零件种类
+        select distinct warehouse_part.name, make_work_book_seq.code
+        from warehouse_part
+                 left join make_work_book_seq on warehouse_part.name = make_work_book_seq.code
+
+    </select>
+    <select id="getStepsByName" resultType="com.ricemarch.cms.pms.entity.MakeWorkBookSeq">
+
+        select id, code, name, value
+        from make_work_book_seq
+        where code = #{name}
+        order by value
+
+    </select>
+    <select id="getSeqBookDtos" resultType="com.ricemarch.cms.pms.dto.make.SeqBookDto">
+        select make_work_book_seq.id as seqId,
+               code                  as partName,
+               name                  as seqCode,
+               value,
+               mwb.work_name         as workName,
+               mwb.work_no           as workNo
+        from make_work_book_seq
+                 left join make_work_book mwb on make_work_book_seq.id = mwb.work_sequence_id
+        where code = #{name}
+        order by value
+    </select>
+
 
 </mapper>

@@ -16,4 +16,6 @@ import org.springframework.stereotype.Repository;
 public interface QualityPartClaimMapper extends BaseMapper<QualityPartClaim> {
 
     String getLevelByPartCode(String code);
+
+    String getByPartName(String name);
 }

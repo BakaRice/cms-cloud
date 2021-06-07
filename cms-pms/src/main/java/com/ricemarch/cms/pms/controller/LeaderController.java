@@ -361,6 +361,28 @@ public class LeaderController extends BaseController {
         return new BaseResponse<>(attendancesOverview);
     }
 
+    @ApiOperation("【PUSH!】从某日开始前七天的考勤 overview")
+    @GetMapping("/seven-attendances-overview")
+    public BaseResponse<AttendanceOverviewDto> getSevenAttendanceOverview(@RequestParam LocalDate date) {
+
+        //从token中获取
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+        Integer roleId = getRoleId();
+        AttendanceOverviewDto attendanceOverviewDto = new AttendanceOverviewDto();
+        List<AttendancesOverview> sevenList = new ArrayList<>();
+        sevenList.add(attendanceService.getOverviewByDate(date, institutionId, cellId));
+        sevenList.add(attendanceService.getOverviewByDate(date.plusDays(-1), institutionId, cellId));
+        sevenList.add(attendanceService.getOverviewByDate(date.plusDays(-2), institutionId, cellId));
+        sevenList.add(attendanceService.getOverviewByDate(date.plusDays(-3), institutionId, cellId));
+        sevenList.add(attendanceService.getOverviewByDate(date.plusDays(-4), institutionId, cellId));
+        sevenList.add(attendanceService.getOverviewByDate(date.plusDays(-5), institutionId, cellId));
+        sevenList.add(attendanceService.getOverviewByDate(date.plusDays(-6), institutionId, cellId));
+        attendanceOverviewDto.setSevenList(sevenList);
+        return new BaseResponse<>(attendanceOverviewDto);
+
+    }
+
     @ApiOperation("修改某人的某天的考勤")
     @PutMapping("/attendance/{date}/user/{userId}")
     public BaseResponse postAttendance(@RequestBody BaseRequest request, @PathVariable("date") Date date, @PathVariable("userId") String userId) {
@@ -372,6 +394,19 @@ public class LeaderController extends BaseController {
     public BaseResponse getSchedule(@PathVariable("userId") String userId) {
         //从token中获取进行鉴权
         return new BaseResponse();
+    }
+
+    @ApiOperation("获取60天的排版信息")
+    @GetMapping("/60-schedules")
+    public BaseResponse<DateSchedulesListDto> get60Schedules(@RequestParam("date") LocalDate date, @RequestParam("userId") Long userId) {
+        Long myuid = getUserId();
+        Long cellId = getCellId();
+        Long institutionId = getInstitutionId();
+
+        Integer offest = 40;
+        DateSchedulesListDto dto = schedulingService.get60Schedules(date, userId, offest);
+
+        return new BaseResponse<>(dto);
     }
 
     @ApiOperation("批量修改排班信息【TEST-0】")

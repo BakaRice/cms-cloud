@@ -1,5 +1,6 @@
 package com.ricemarch.cms.pms.service;
 
+import com.ricemarch.cms.pms.dto.make.WorkBookDto;
 import com.ricemarch.cms.pms.entity.MakeWorkBook;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MakeWorkBookService extends IService<MakeWorkBook> {
 
+    WorkBookDto getWorkBookByWorkNo(String workNo);
 }

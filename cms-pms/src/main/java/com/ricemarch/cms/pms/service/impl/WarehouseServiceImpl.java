@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ricemarch.cms.pms.entity.Warehouse;
 import com.ricemarch.cms.pms.mapper.WarehouseMapper;
 import com.ricemarch.cms.pms.service.WarehouseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse> implements WarehouseService {
 
+    @Autowired
+    WarehouseMapper warehouseMapper;
+
+    @Override
+    public List<Warehouse> getAll() {
+     return    warehouseMapper.getAll();
+    }
 }

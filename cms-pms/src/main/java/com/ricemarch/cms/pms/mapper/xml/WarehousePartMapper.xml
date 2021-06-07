@@ -64,5 +64,9 @@
         where name = #{partName}
         limit 1
     </select>
+    <select id="getAllType" resultType="java.lang.String">
+        select distinct name
+        from warehouse_part
+    </select>
 
 </mapper>

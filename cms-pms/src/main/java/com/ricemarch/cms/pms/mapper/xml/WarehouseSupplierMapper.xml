@@ -24,6 +24,37 @@
             select distinct wp.supplier_id
             from warehouse_part wp)
     </select>
+    <select id="getAllList" resultType="com.ricemarch.cms.pms.dto.wms.SupplierOverviewDto">
+        select supplier_name as supplierName, id as supplierId, 0 as totalTypeNum, 0 as totalNum
+        from warehouse_supplier
+        ORDER BY id
+    </select>
 
+    <select id="getSpacePartTotalTypeNumList" resultType="com.ricemarch.cms.pms.dto.wms.CargoNumDto">
+        select supplier_id as supplierId, count(distinct name) as num
+        from warehouse_space_part
+        group by supplier_id
+    </select>
+
+    <select id="getPartTotalNumList" resultType="com.ricemarch.cms.pms.dto.wms.CargoNumDto">
+        select supplier_id as supplierId, count(1) as num
+        from warehouse_part
+        group by supplier_id;
+
+    </select>
+    <select id="getSpacePartTotalNumList" resultType="com.ricemarch.cms.pms.dto.wms.CargoNumDto">
+        select supplier_id as supplierId, count(1) as num
+        from warehouse_space_part
+        group by supplier_id
+    </select>
+    <select id="getPartTotalTypeNumList" resultType="com.ricemarch.cms.pms.dto.wms.CargoNumDto">
+        select supplier_id as supplierId, count(distinct name) as num
+        from warehouse_part
+        group by supplier_id;
+    </select>
+    <select id="getAll" resultType="com.ricemarch.cms.pms.entity.WarehouseSupplier">
+        select id, supplier_name, supplier_contact, supplier_phone, supplier_type, supplier_status
+        from warehouse_supplier
+    </select>
 
 </mapper>

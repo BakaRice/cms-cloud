@@ -4,22 +4,37 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.MakeWorkBook">
-        <id column="id" property="id" />
-        <result column="work_no" property="workNo" />
-        <result column="work_name" property="workName" />
-        <result column="user_protection_tools" property="userProtectionTools" />
-        <result column="user_tools" property="userTools" />
-        <result column="part_name" property="partName" />
-        <result column="part_id" property="partId" />
-        <result column="work_sequence_name" property="workSequenceName" />
-        <result column="work_sequence_id" property="workSequenceId" />
-        <result column="ban" property="ban" />
-        <result column="other" property="other" />
+        <id column="id" property="id"/>
+        <result column="work_no" property="workNo"/>
+        <result column="work_name" property="workName"/>
+        <result column="user_protection_tools" property="userProtectionTools"/>
+        <result column="user_tools" property="userTools"/>
+        <result column="part_name" property="partName"/>
+        <result column="part_id" property="partId"/>
+        <result column="work_sequence_name" property="workSequenceName"/>
+        <result column="work_sequence_id" property="workSequenceId"/>
+        <result column="ban" property="ban"/>
+        <result column="other" property="other"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, work_no, work_name, user_protection_tools, user_tools, part_name, part_id, work_sequence_name, work_sequence_id, ban, other
     </sql>
+    <select id="getByWorkNo" resultType="com.ricemarch.cms.pms.entity.MakeWorkBook">
+        select id,
+               work_no,
+               work_name,
+               user_protection_tools,
+               user_tools,
+               part_name,
+               part_id,
+               work_sequence_name,
+               work_sequence_id,
+               ban,
+               other
+        from make_work_book
+        where work_no = #{workNo}
+    </select>
 
 </mapper>

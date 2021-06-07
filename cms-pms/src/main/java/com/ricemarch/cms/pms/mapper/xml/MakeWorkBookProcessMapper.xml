@@ -4,19 +4,31 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.MakeWorkBookProcess">
-        <id column="id" property="id" />
-        <result column="work_book_id" property="workBookId" />
-        <result column="process_no" property="processNo" />
-        <result column="explanation" property="explanation" />
-        <result column="minutes" property="minutes" />
-        <result column="seconds" property="seconds" />
-        <result column="MainSteps" property="mainsteps" />
-        <result column="focus" property="focus" />
+        <id column="id" property="id"/>
+        <result column="work_book_id" property="workBookId"/>
+        <result column="process_no" property="processNo"/>
+        <result column="explanation" property="explanation"/>
+        <result column="minutes" property="minutes"/>
+        <result column="seconds" property="seconds"/>
+        <result column="MainSteps" property="mainsteps"/>
+        <result column="focus" property="focus"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, work_book_id, process_no, explanation, minutes, seconds, MainSteps, focus
     </sql>
+    <select id="getByBookId" resultType="com.ricemarch.cms.pms.entity.MakeWorkBookProcess">
+        select id,
+               work_book_id,
+               process_no,
+               explanation,
+               minutes,
+               seconds,
+               "MainSteps",
+               focus
+        from make_work_book_process
+        where work_book_id = #{id}
+    </select>
 
 </mapper>

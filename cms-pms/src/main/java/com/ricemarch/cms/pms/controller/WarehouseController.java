@@ -13,6 +13,7 @@ import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -49,6 +50,9 @@ public class WarehouseController extends BaseController {
     @Autowired
     WarehouseTxService warehouseTxService;
 
+    @Autowired
+    MakeWorkBookSeqService makeWorkBookSeqService;
+
     @ApiOperation("[push]新建仓库")
     @PostMapping
     public BaseResponse<Boolean> postWarehouse(@RequestBody Warehouse warehouse) {
@@ -70,6 +74,12 @@ public class WarehouseController extends BaseController {
         }
     }
 
+    @ApiOperation("仓库列表")
+    @GetMapping
+    public BaseResponse<List<Warehouse>> getWarehouse() {
+        List<Warehouse> warehouseList = warehouseService.getAll();
+        return new BaseResponse<>(warehouseList);
+    }
 
     @ApiOperation("旭日图")
     @GetMapping("Sunburst")
@@ -146,7 +156,7 @@ public class WarehouseController extends BaseController {
     @ApiOperation("根据零件种类查询零件库存详情列表")
     @GetMapping("cargo-detail")
     public BaseResponse<PageInfo> getCargoDetailPage(@RequestParam String partName, @RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum, pageSize);
         List<PartCargoDetailDto> list = warehousePartService.getCargoDetailByPartName(partName);
         PageInfo<PartCargoDetailDto> partCargoDetailDtoPageInfo = new PageInfo<>(list);
         return new BaseResponse<>(partCargoDetailDtoPageInfo);
@@ -174,4 +184,28 @@ public class WarehouseController extends BaseController {
         return warehouseTxService.postOutboundService(userName, userId, outboundDto);
     }
 
+    @ApiOperation("根据cargocode判断零件是否在仓库内")
+    public BaseResponse<Boolean> getPartByCargoCode(@RequestParam String cargoCode) {
+        int byCodeListAndNoOut = warehousePartService.getByCodeListAndNoOut(List.of(cargoCode));
+        return new BaseResponse<>(byCodeListAndNoOut == 1);
+    }
+
+
+    @ApiOperation("查询所有零件和备件种类名称")
+    @GetMapping("/all-type")
+    public BaseResponse<List> getAllType() {
+        List<String> partTypeList = warehousePartService.getAllType();
+        List<String> spacePartTypeList = warehouseSpacePartService.getAllType();
+        for (String s : spacePartTypeList) {
+            partTypeList.add(s);
+        }
+        return new BaseResponse<>(partTypeList);
+    }
+
+    @ApiOperation("分页查找零件列表，包含其是否有初始化工序")
+    @GetMapping("/part/make")
+    public BaseResponse<PageInfo<PartSeqDto>> getAllPartWithMakeInfo(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
+        PageInfo<PartSeqDto> seqDtoPageInfo = makeWorkBookSeqService.getPagePartWithMakeInfo(pageNum, pageSize);
+        return new BaseResponse<>(seqDtoPageInfo);
+    }
 }

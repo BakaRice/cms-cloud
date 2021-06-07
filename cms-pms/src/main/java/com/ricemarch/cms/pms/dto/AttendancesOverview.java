@@ -3,6 +3,8 @@ package com.ricemarch.cms.pms.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
+
 /**
  * @author RiceMarch
  * @date 2021/5/16 20:16
@@ -18,4 +20,6 @@ public class AttendancesOverview {
     private Integer undeal; //3
     private Integer off; // 4
     private Integer trip; //5
+
+    private LocalDate currDate;
 }

@@ -3,6 +3,7 @@ package com.ricemarch.cms.pms.controller;
 import com.ricemarch.cms.pms.common.component.WorkInitUtils;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
+import com.ricemarch.cms.pms.dto.make.SeqBookDto;
 import com.ricemarch.cms.pms.dto.make.WorkBookDto;
 import com.ricemarch.cms.pms.dto.wms.StepsDto;
 import com.ricemarch.cms.pms.entity.MakeWorkBook;
@@ -57,6 +58,13 @@ public class MakeController extends BaseController {
         return makeTxService.initWorkBook(workBookDto);
     }
 
+    @ApiOperation("根据workno获取标准作业书")
+    @GetMapping("/work-book")
+    public BaseResponse<WorkBookDto> getWorkBookByWorkNo(@RequestParam String workNo) {
+        WorkBookDto workBookDto = workBookService.getWorkBookByWorkNo(workNo);
+        return new BaseResponse<>(workBookDto);
+    }
+
     @ApiOperation("[PUSH]初始化工序")
     @PostMapping("/steps")
     public BaseResponse<Boolean> initSteps(@RequestBody StepsDto stepsDto) {
@@ -92,5 +100,20 @@ public class MakeController extends BaseController {
             throw new PmsServiceException("加工初始化失败！");
         }
         return new BaseResponse<>(is_init);
+    }
+
+
+    @ApiOperation("根据零件名查找工序")
+    @GetMapping("/steps")
+    public BaseResponse<List<MakeWorkBookSeq>> getSteps(@RequestParam String name) {
+        List<MakeWorkBookSeq> list = seqService.getStepsByName(name);
+        return new BaseResponse<>(list);
+    }
+
+    @ApiOperation("根据零件名查找工序和作业名")
+    @GetMapping("/stepDto")
+    public BaseResponse<List<SeqBookDto>> getStepDto(@RequestParam String name) {
+        List<SeqBookDto> list = seqService.getSeqBookDtos(name);
+        return new BaseResponse<>(list);
     }
 }

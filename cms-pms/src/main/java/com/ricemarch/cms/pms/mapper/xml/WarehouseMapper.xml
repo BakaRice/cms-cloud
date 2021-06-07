@@ -4,20 +4,32 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.Warehouse">
-        <id column="id" property="id" />
-        <result column="warehouse_name" property="warehouseName" />
-        <result column="warehouse_code" property="warehouseCode" />
-        <result column="warehouse_owner" property="warehouseOwner" />
-        <result column="warehouse_owner_name" property="warehouseOwnerName" />
-        <result column="warehouse_owner_phone" property="warehouseOwnerPhone" />
-        <result column="warehouse_address" property="warehouseAddress" />
-        <result column="warehouse_status" property="warehouseStatus" />
-        <result column="warehouse_type" property="warehouseType" />
+        <id column="id" property="id"/>
+        <result column="warehouse_name" property="warehouseName"/>
+        <result column="warehouse_code" property="warehouseCode"/>
+        <result column="warehouse_owner" property="warehouseOwner"/>
+        <result column="warehouse_owner_name" property="warehouseOwnerName"/>
+        <result column="warehouse_owner_phone" property="warehouseOwnerPhone"/>
+        <result column="warehouse_address" property="warehouseAddress"/>
+        <result column="warehouse_status" property="warehouseStatus"/>
+        <result column="warehouse_type" property="warehouseType"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, warehouse_name, warehouse_code, warehouse_owner, warehouse_owner_name, warehouse_owner_phone, warehouse_address, warehouse_status, warehouse_type
     </sql>
+    <select id="getAll" resultType="com.ricemarch.cms.pms.entity.Warehouse">
+        select id,
+               warehouse_name,
+               warehouse_code,
+               warehouse_owner,
+               warehouse_owner_name,
+               warehouse_owner_phone,
+               warehouse_address,
+               warehouse_status,
+               warehouse_type
+        from warehouse;
+    </select>
 
 </mapper>

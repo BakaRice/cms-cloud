@@ -96,4 +96,9 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
         WarehousePart warehousePart = warehousePartMapper.getByName(partName);
         return warehousePart;
     }
+
+    @Override
+    public List<String> getAllType() {
+        return  warehousePartMapper.getAllType();
+    }
 }

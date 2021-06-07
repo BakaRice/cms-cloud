@@ -35,15 +35,40 @@
     <select id="selectRosterList" resultType="com.ricemarch.cms.pms.dto.Roster">
         select u.id, u.name, s.start_time, s.end_time, s.schedule_type_id, t.name
         from scheduling s,
-             user_pg as u,
-             scheduling_type as t
+        user_pg as u,
+        scheduling_type as t
         where 1=1
         <if test="aLong != null ">
-          and  user_id = #{aLong}
+            and user_id = #{aLong}
         </if>
-          and u.id = s.user_id
-          and s.schedule_type_id = t.id
-          and s.is_delete = 0;
+        and u.id = s.user_id
+        and s.schedule_type_id = t.id
+        and s.is_delete = 0;
+    </select>
+    <select id="getRosterByUserId" resultType="com.ricemarch.cms.pms.entity.Scheduling">
+        select *
+        from scheduling
+        where user_id = #{uid}
+          and start_time <![CDATA[<=]]> CURRENT_DATE
+          AND end_time <![CDATA[>=]]> CURRENT_DATE
+          AND is_delete = 0
+    </select>
+    <select id="get60Schedules" resultType="com.ricemarch.cms.pms.entity.Scheduling">
+        select id,
+               user_id,
+               schedule_type_id,
+               start_time,
+               end_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               is_delete
+        from scheduling
+        where is_delete = 0
+          and user_id = #{userId}
+          and (end_time between #{startTime} and #{endTime}
+            or start_time between #{startTime} and #{endTime})
     </select>
 
 

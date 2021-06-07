@@ -19,5 +19,10 @@
                  left join warehouse_part wp on wp.name = qpc.part_name
         where wp.code = #{code}
     </select>
+    <select id="getByPartName" resultType="java.lang.String">
+        select level
+        from quality_part_claim
+        where part_name = #{name}
+    </select>
 
 </mapper>

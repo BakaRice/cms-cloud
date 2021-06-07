@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author ricemarch
@@ -21,5 +21,9 @@ import java.util.List;
 public interface SchedulingMapper extends BaseMapper<Scheduling> {
     List<Scheduling> selectListByTimeAndUserIdList(LocalDate startTime, LocalDate endTime, List<Long> userIdList);
 
-    List<Roster> selectRosterList(@Param("aLong")Long aLong);
+    List<Roster> selectRosterList(@Param("aLong") Long aLong);
+
+    Scheduling getRosterByUserId(@Param("uid") Long uid);
+
+    List<Scheduling> get60Schedules(@Param("startTime") LocalDate startTime, @Param("endTime") LocalDate endTime, @Param("userId") Long userId);
 }

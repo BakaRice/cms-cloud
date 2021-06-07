@@ -66,4 +66,10 @@ public class WarehouseSpacePartServiceImpl extends ServiceImpl<WarehouseSpacePar
         }
         return list;
     }
+
+    @Override
+    public List<String> getAllType() {
+
+        return warehouseSpacePartMapper.getAllType();
+    }
 }

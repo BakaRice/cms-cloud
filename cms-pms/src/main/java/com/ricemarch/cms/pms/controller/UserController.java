@@ -7,6 +7,7 @@ import com.ricemarch.cms.pms.common.component.MyToken;
 import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseRequest;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
+import com.ricemarch.cms.pms.dto.ClockInDto;
 import com.ricemarch.cms.pms.dto.Roster;
 import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.service.*;
@@ -88,6 +89,15 @@ public class UserController extends BaseController {
         return new BaseResponse();
     }
 
+    @ApiOperation("获取预打卡信息")
+    @GetMapping("/clock-in")
+    public BaseResponse<ClockInDto> getClockIn() {
+        Long uid = getUserId();
+        LocalDate currDate = LocalDate.now();
+        ClockInDto cloackDto = attendanceService.getClockInfo(uid, currDate);
+        return new BaseResponse<>(cloackDto);
+    }
+
     @PostMapping("/attendance")
     public BaseResponse postAttendance(@RequestBody BaseRequest request) {
         //从token中获取
@@ -120,8 +130,12 @@ public class UserController extends BaseController {
                 currDateAttendance.setStatus(1);
             } else if (schedulingType.getEndTime().compareTo(currLocalUpTime) < 0) {
                 currDateAttendance.setStatus(3);
+            } else if (schedulingType.getStartTime().compareTo(currLocalUpTime) > 0) {
+                currDateAttendance.setStatus(0);
             }
         } else {
+            //下班判定
+            currDateAttendance.setEndTime(currTime);
             if (currDateAttendance.getStatus() == 3) {
                 throw new PmsServiceException("打卡状态已确定");
             }
@@ -131,7 +145,12 @@ public class UserController extends BaseController {
             if (schedulingType.getEndTime().compareTo(currLocalDownTime) > 0) {
                 currDateAttendance.setStatus(2);
             } else {
-                currDateAttendance.setStatus(0);
+                //如果是迟到就是迟到 不是迟到 且没有早退才是正常
+                if (currDateAttendance.getStatus() == 1) {
+                    currDateAttendance.setStatus(1);
+                } else {
+                    currDateAttendance.setStatus(0);
+                }
             }
 
 

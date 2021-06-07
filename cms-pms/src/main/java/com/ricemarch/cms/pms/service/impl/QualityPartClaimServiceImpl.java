@@ -27,4 +27,9 @@ public class QualityPartClaimServiceImpl extends ServiceImpl<QualityPartClaimMap
     public String getByPartCode(String code) {
         return qualityPartClaimMapper.getLevelByPartCode(code);
     }
+
+    @Override
+    public String getByPartName(String name) {
+        return qualityPartClaimMapper.getByPartName(name);
+    }
 }

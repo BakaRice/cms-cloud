@@ -22,4 +22,6 @@ public interface WarehouseSpacePartMapper extends BaseMapper<WarehouseSpacePart>
     List<String> getTypeListBySpId(@Param("spId") Long spId);
 
     List<WarehouseSupplier> getSupplierList();
+
+    List<String> getAllType();
 }

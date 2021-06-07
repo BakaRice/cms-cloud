@@ -62,6 +62,13 @@
             <version>1.1.20</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.xuxueli/xxl-job-core -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
 
         <!-- velocity 模板引擎, Mybatis Plus 代码生成器需要 -->
         <dependency>

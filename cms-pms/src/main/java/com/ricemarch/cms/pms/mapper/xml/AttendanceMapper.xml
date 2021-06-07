@@ -57,11 +57,12 @@
             <if test="institutionId != null">
                 and up.institution_id = #{institutionId}
             </if>
-            or up.id not in (select attendance.user_id
-            from attendance
-            where curr_date = #{date})
+            or up.id not in (select attendance.user_id from attendance where curr_date = #{date})
         </where>
         order by a.id
+
+
+
 
     </select>
     <select id="getOverviewCount" resultType="java.lang.Integer">
