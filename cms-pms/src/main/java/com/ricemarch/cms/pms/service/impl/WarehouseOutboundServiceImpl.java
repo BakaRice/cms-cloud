@@ -27,4 +27,9 @@ public class WarehouseOutboundServiceImpl extends ServiceImpl<WarehouseOutboundM
     public int outByIdList(List<String> cargoCodeList, Long oid, String userName, Long uid) {
         return warehouseOutboundMapper.outByIdList(cargoCodeList,oid,userName,uid);
     }
+
+    @Override
+    public int outByIdList2(List<String> cargoCodeList, Long oid, String userName, Long uid) {
+        return warehouseOutboundMapper.outByIdList2(cargoCodeList,oid,userName,uid);
+    }
 }

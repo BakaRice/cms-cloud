@@ -48,5 +48,36 @@
         SELECT distinct name
         from warehouse_space_part
     </select>
+    <select id="getByCode" resultType="com.ricemarch.cms.pms.entity.WarehouseSpacePart">
+        select id,
+               name,
+               code,
+               type_code,
+               work_id,
+               supplier_id,
+               warehouse_id,
+               status,
+               in_time,
+               out_time,
+               is_delete,
+               create_time,
+               update_time,
+               create_by,
+               create_name,
+               update_by,
+               update_name,
+               inbound_id,
+               outbound_id
+        from warehouse_space_part
+        where outbound_id is null and code = #{cargoCode}
+    </select>
+    <select id="getByCodeListAndNoOut" resultType="java.lang.Integer">
+        select count(*)
+        from warehouse_space_part wsp
+        where wsp.outbound_id is null and wsp.code in
+        <foreach collection="cargoCodeList" item="cargoCode" open="(" close=")" separator=",">
+            #{cargoCode}
+        </foreach>
+    </select>
 
 </mapper>

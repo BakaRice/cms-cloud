@@ -6,10 +6,7 @@ import com.ricemarch.cms.pms.common.facade.BaseResponse;
 import com.ricemarch.cms.pms.dto.make.SeqBookDto;
 import com.ricemarch.cms.pms.dto.make.WorkBookDto;
 import com.ricemarch.cms.pms.dto.wms.StepsDto;
-import com.ricemarch.cms.pms.entity.MakeWorkBook;
-import com.ricemarch.cms.pms.entity.MakeWorkBookProcess;
-import com.ricemarch.cms.pms.entity.MakeWorkBookSeq;
-import com.ricemarch.cms.pms.entity.WarehousePart;
+import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +48,9 @@ public class MakeController extends BaseController {
 
     @Autowired
     MakeWorkBookProcessService workBookProcessService;
+
+    @Autowired
+    MakePartProcessService makePartProcessService;
 
     @ApiOperation("[PUSH]读入标准作业书,标准作业数是对工序内的执行细节进行约束的,")
     @PostMapping("/work-book")
@@ -116,4 +116,20 @@ public class MakeController extends BaseController {
         List<SeqBookDto> list = seqService.getSeqBookDtos(name);
         return new BaseResponse<>(list);
     }
+
+
+    @ApiOperation("根据零件code获取零件个体信息")
+    @GetMapping("/part")
+    public BaseResponse<WarehousePart> getPartByCode(@RequestParam String code){
+        WarehousePart warehousePart = warehousePartService.getOutPartByCode(code);
+        return new BaseResponse<>(warehousePart);
+    }
+
+    @ApiOperation("根据零件code获取零件加工信息")
+    @GetMapping("/workInfo")
+    public BaseResponse<MakePartProcess> getWorkInfoByCode(@RequestParam String code){
+        MakePartProcess makePartProcess = makePartProcessService.findByCode(code);
+        return new BaseResponse<>(makePartProcess);
+    }
+
 }

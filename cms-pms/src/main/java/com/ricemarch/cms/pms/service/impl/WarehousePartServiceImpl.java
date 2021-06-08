@@ -8,12 +8,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ricemarch.cms.pms.dto.wms.PartCargoDetailDto;
 import com.ricemarch.cms.pms.dto.wms.PartCargoDto;
 import com.ricemarch.cms.pms.dto.wms.SunburstItem;
-import com.ricemarch.cms.pms.entity.WarehousePart;
-import com.ricemarch.cms.pms.entity.WarehouseSpacePart;
-import com.ricemarch.cms.pms.entity.WarehouseSupplier;
-import com.ricemarch.cms.pms.mapper.WarehousePartMapper;
-import com.ricemarch.cms.pms.mapper.WarehouseSupplierMapper;
+import com.ricemarch.cms.pms.entity.*;
+import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.WarehousePartService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +27,7 @@ import java.util.List;
  * @since 2021-05-20
  */
 @Service
+@Slf4j
 public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, WarehousePart> implements WarehousePartService {
 
     @Autowired
@@ -36,6 +35,15 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
 
     @Autowired
     WarehousePartMapper warehousePartMapper;
+
+    @Autowired
+    WarehouseSpacePartMapper warehouseSpacePartMapper;
+
+    @Autowired
+    WarehouseOutboundMapper warehouseOutboundMapper;
+
+    @Autowired
+    WarehouseOutboundDetailMapper warehouseOutboundDetailMapper;
 
 
     @Override
@@ -87,7 +95,8 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
     }
 
     @Override
-    public int getByCodeListAndNoOut(List<String> cargoCodeList) {
+    public Integer getByCodeListAndNoOut(List<String> cargoCodeList) {
+        log.debug("零件可出库数量：{}", warehousePartMapper.getByCodeListAndNoOut(cargoCodeList));
         return warehousePartMapper.getByCodeListAndNoOut(cargoCodeList);
     }
 
@@ -99,6 +108,34 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
 
     @Override
     public List<String> getAllType() {
-        return  warehousePartMapper.getAllType();
+        return warehousePartMapper.getAllType();
+    }
+
+    @Override
+    public WarehouseOutboundDetail getByCargoCode(String cargoCode) {
+
+        WarehouseOutboundDetail warehouseOutboundDetail = new WarehouseOutboundDetail();
+
+        WarehousePart part = warehousePartMapper.getByCode(cargoCode);
+        WarehouseSpacePart spacePart = warehouseSpacePartMapper.getByCode(cargoCode);
+        if (part == null && spacePart == null) {
+            return null;
+        } else if (part != null && spacePart == null) {
+            warehouseOutboundDetail.setCargoCode(cargoCode)
+                    .setCargoName(part.getName())
+                    .setCargoType(part.getTypeCode())
+                    .setCargoSupplierId(part.getSupplierId());
+        }else if (spacePart != null && part == null){
+            warehouseOutboundDetail.setCargoCode(cargoCode)
+                    .setCargoName(spacePart.getName())
+                    .setCargoType(spacePart.getTypeCode())
+                    .setCargoSupplierId(spacePart.getSupplierId());
+        }
+        return warehouseOutboundDetail;
+    }
+
+    @Override
+    public WarehousePart getOutPartByCode(String code) {
+        return warehousePartMapper.getOutPartByCode(code);
     }
 }

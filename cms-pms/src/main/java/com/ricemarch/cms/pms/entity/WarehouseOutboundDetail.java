@@ -2,6 +2,8 @@ package com.ricemarch.cms.pms.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.Serializable;
 
@@ -14,6 +16,7 @@ import java.io.Serializable;
  * @since 2021-05-20
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class WarehouseOutboundDetail implements Serializable {
 

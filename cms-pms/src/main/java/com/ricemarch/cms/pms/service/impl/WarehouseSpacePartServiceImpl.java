@@ -9,6 +9,7 @@ import com.ricemarch.cms.pms.entity.WarehouseSupplier;
 import com.ricemarch.cms.pms.mapper.WarehouseSpacePartMapper;
 import com.ricemarch.cms.pms.service.WarehouseSpacePartService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.List;
  * @since 2021-05-20
  */
 @Service
+@Slf4j
 public class WarehouseSpacePartServiceImpl extends ServiceImpl<WarehouseSpacePartMapper, WarehouseSpacePart> implements WarehouseSpacePartService {
 
     @Autowired
@@ -71,5 +73,11 @@ public class WarehouseSpacePartServiceImpl extends ServiceImpl<WarehouseSpacePar
     public List<String> getAllType() {
 
         return warehouseSpacePartMapper.getAllType();
+    }
+
+    @Override
+    public Integer getByCodeListAndNoOut(List<String> cargoCodeList) {
+        log.debug("备件可出库数量：{}", warehouseSpacePartMapper.getByCodeListAndNoOut(cargoCodeList));
+        return warehouseSpacePartMapper.getByCodeListAndNoOut(cargoCodeList);
     }
 }

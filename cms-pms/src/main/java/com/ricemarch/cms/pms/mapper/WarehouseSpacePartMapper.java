@@ -24,4 +24,8 @@ public interface WarehouseSpacePartMapper extends BaseMapper<WarehouseSpacePart>
     List<WarehouseSupplier> getSupplierList();
 
     List<String> getAllType();
+
+    WarehouseSpacePart getByCode(String cargoCode);
+
+    Integer getByCodeListAndNoOut(List<String> cargoCodeList);
 }

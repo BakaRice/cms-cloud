@@ -43,6 +43,9 @@ public class WarehouseTxService {
     @Autowired
     WarehouseInboundDetailService inboundDetailService;
 
+    @Autowired
+    WarehouseOutboundDetailService outboundDetailService;
+
     @Transactional(rollbackFor = Exception.class)
     public BaseResponse postInboundService(String userName, Long userId, InboundDto inboundDto) {
         //判断仓库是否存在
@@ -144,25 +147,40 @@ public class WarehouseTxService {
         if (warehouseService.getById(wid = outboundDto.getWarehouse().getId()) == null) {
             throw new PmsServiceException("该仓库不存在");
         }
-        //存入入库单
+        //存入出库单
         WarehouseOutbound warehouseOutbound = new WarehouseOutbound();
         warehouseOutbound.setWarehouseId(wid).setCreateBy(userId).setCreateName(userName);
         boolean save = warehouseOutboundService.save(warehouseOutbound);
         if (!save) {
             throw new PmsServiceException("保存出库单失败");
         }
+        //出库单细节
         Long id = warehouseOutbound.getId();
 
         if (CollectionUtils.isEmpty(outboundDto.getCargoCodeList())) {
             throw new PmsServiceException("出库单列表不能为空");
         }
         int s = warehousePartService.getByCodeListAndNoOut(outboundDto.getCargoCodeList());
-        if (s != outboundDto.getCargoCodeList().size()) {
+        int s1 = warehouseSpacePartService.getByCodeListAndNoOut(outboundDto.getCargoCodeList());
+        if ((s+s1) != outboundDto.getCargoCodeList().size()) {
             throw new PmsServiceException("出库单列表存在已出库或不存在零件，无法出库");
         }
         try {
 
             int i = warehouseOutboundService.outByIdList(outboundDto.getCargoCodeList(), id, userName, userId);
+            int i1 = warehouseOutboundService.outByIdList2(outboundDto.getCargoCodeList(), id, userName, userId);
+            if (i+i1 != s+s1){
+                throw new PmsServiceException("出库过程中发送异常，出库失败，无法出库。");
+            }
+
+            List<WarehouseOutboundDetail>  outboundDetails = new ArrayList<>();
+            for (String ss : outboundDto.getCargoCodeList()) {
+                WarehouseOutboundDetail warehouseOutboundDetail = new WarehouseOutboundDetail();
+                warehouseOutboundDetail.setCargoCode(ss);
+                warehouseOutboundDetail.setWarehouseOutboundId(id);
+                outboundDetails.add(warehouseOutboundDetail);
+            }
+            outboundDetailService.saveBatch(outboundDetails);
         } catch (Exception ex) {
             throw new PmsServiceException("出库单列表存在错误零件编号，无法出库");
         }

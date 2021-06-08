@@ -185,9 +185,12 @@ public class WarehouseController extends BaseController {
     }
 
     @ApiOperation("根据cargocode判断零件是否在仓库内")
-    public BaseResponse<Boolean> getPartByCargoCode(@RequestParam String cargoCode) {
-        int byCodeListAndNoOut = warehousePartService.getByCodeListAndNoOut(List.of(cargoCode));
-        return new BaseResponse<>(byCodeListAndNoOut == 1);
+    @GetMapping("/cargoCode")
+    public BaseResponse<WarehouseOutboundDetail> getPartByCargoCode(@RequestParam String cargoCode) {
+
+        WarehouseOutboundDetail warehouseOutboundDetail = warehousePartService.getByCargoCode(cargoCode);
+
+        return new BaseResponse<>(warehouseOutboundDetail);
     }
 
 

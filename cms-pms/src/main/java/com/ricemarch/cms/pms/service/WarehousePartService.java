@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ricemarch.cms.pms.dto.wms.PartCargoDetailDto;
 import com.ricemarch.cms.pms.dto.wms.PartCargoDto;
 import com.ricemarch.cms.pms.dto.wms.SunburstItem;
+import com.ricemarch.cms.pms.entity.MakePartProcess;
+import com.ricemarch.cms.pms.entity.WarehouseOutboundDetail;
 import com.ricemarch.cms.pms.entity.WarehousePart;
 import com.ricemarch.cms.pms.entity.WarehouseSupplier;
 
@@ -27,10 +29,14 @@ public interface WarehousePartService extends IService<WarehousePart> {
 
     List<PartCargoDetailDto> getCargoDetailByPartName(String partName);
 
-    int getByCodeListAndNoOut(List<String> cargoCodeList);
+    Integer getByCodeListAndNoOut(List<String> cargoCodeList);
 
     WarehousePart getByName(String partName);
 
     List<String> getAllType();
+
+    WarehouseOutboundDetail getByCargoCode(String cargoCode);
+
+    WarehousePart getOutPartByCode(String code);
 
 }

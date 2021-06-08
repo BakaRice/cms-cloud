@@ -19,4 +19,6 @@ import java.util.List;
 public interface WarehouseOutboundMapper extends BaseMapper<WarehouseOutbound> {
 
     int outByIdList(@Param("cargoCodeList") List<String> cargoCodeList, @Param("oid")Long oid, @Param("userName") String userName, @Param("uid") Long uid);
+
+    int outByIdList2(@Param("cargoCodeList") List<String> cargoCodeList, @Param("oid")Long oid, @Param("userName") String userName, @Param("uid") Long uid);
 }

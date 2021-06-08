@@ -68,5 +68,54 @@
         select distinct name
         from warehouse_part
     </select>
+    <select id="getByCode" resultType="com.ricemarch.cms.pms.entity.WarehousePart">
+        select id,
+               name,
+               code,
+               type_code,
+               work_id,
+               supplier_id,
+               warehouse_id,
+               status,
+               in_time,
+               out_time,
+               is_delete,
+               create_time,
+               update_time,
+               create_by,
+               create_name,
+               update_by,
+               update_name,
+               inboud_id,
+               outboud_id
+        from warehouse_part
+        where outboud_id is null
+          and code = #{code}
+    </select>
+    <select id="getOutPartByCode" resultType="com.ricemarch.cms.pms.entity.WarehousePart">
+        select id,
+               name,
+               code,
+               type_code,
+               work_id,
+               supplier_id,
+               warehouse_id,
+               status,
+               in_time,
+               out_time,
+               is_delete,
+               create_time,
+               update_time,
+               create_by,
+               create_name,
+               update_by,
+               update_name,
+               inboud_id,
+               outboud_id
+        from warehouse_part wp
+        where wp.code = #{code}
+          and wp.outboud_id is not null
+    </select>
+
 
 </mapper>

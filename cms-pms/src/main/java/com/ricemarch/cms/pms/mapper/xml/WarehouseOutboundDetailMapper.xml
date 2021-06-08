@@ -17,4 +17,5 @@
         id, warehouse_outbound_id, cargo_name, cargo_supplier_id, cargo_type, cargo_code
     </sql>
 
+
 </mapper>

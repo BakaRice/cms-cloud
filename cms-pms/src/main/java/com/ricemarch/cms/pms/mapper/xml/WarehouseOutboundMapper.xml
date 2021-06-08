@@ -28,6 +28,18 @@
             #{cargoCode}
         </foreach>
     </update>
+    <update id="outByIdList2">
+        update warehouse_space_part wp
+        set out_time = current_timestamp,
+        outbound_id = #{oid},
+        update_time = current_timestamp,
+        update_by= #{uid},
+        update_name=#{userName}
+        where wp.code in
+        <foreach collection="cargoCodeList" item="cargoCode" open="(" close=")" separator=",">
+            #{cargoCode}
+        </foreach>
+    </update>
 
 
 </mapper>

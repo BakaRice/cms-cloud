@@ -26,9 +26,13 @@ public interface WarehousePartMapper extends BaseMapper<WarehousePart> {
 
     List<PartCargoDetailDto> getCargoDetailByPartName(String partName);
 
-    int getByCodeListAndNoOut(@Param("cargoCodeList") List<String> cargoCodeList);
+    Integer getByCodeListAndNoOut(@Param("cargoCodeList") List<String> cargoCodeList);
 
     WarehousePart getByName(String partName);
 
     List<String> getAllType();
+
+    WarehousePart getByCode(String code);
+
+    WarehousePart getOutPartByCode(String code);
 }

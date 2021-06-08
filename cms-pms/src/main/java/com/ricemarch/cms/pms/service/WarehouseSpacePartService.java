@@ -22,4 +22,6 @@ public interface WarehouseSpacePartService extends IService<WarehouseSpacePart> 
     List<SunburstItem<WarehouseSupplier>> getSupplierList(int r, int g, int b, int r1, int g1, int b1);
 
     List<String> getAllType();
+
+    Integer getByCodeListAndNoOut(List<String> cargoCodeList);
 }
