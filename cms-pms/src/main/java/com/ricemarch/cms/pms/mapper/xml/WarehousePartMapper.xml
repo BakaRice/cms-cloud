@@ -116,6 +116,24 @@
         where wp.code = #{code}
           and wp.outboud_id is not null
     </select>
+    <select id="getPartPageInfo" resultType="com.ricemarch.cms.pms.dto.wms.PartCargoDto">
+        select wp.name          as name,
+               ws.supplier_name as supplierName,
+               wp.supplier_id   as supplierId,
+               wp.code          as cargoTypeId,
+               '零件'             as cargoTypeName
+        from warehouse_part wp
+                 left join warehouse_supplier ws on ws.id = wp.supplier_id
+    </select>
+    <select id="getSpacePartPageInfo" resultType="com.ricemarch.cms.pms.dto.wms.PartCargoDto">
+        select wsp.name          as name,
+               ws.supplier_name as supplierName,
+               wsp.supplier_id   as supplierId,
+               wsp.code          as cargoTypeId,
+               '备件'             as cargoTypeName
+        from warehouse_space_part wsp
+                 left join warehouse_supplier ws on ws.id = wsp.supplier_id
+    </select>
 
 
 </mapper>

@@ -172,6 +172,25 @@ public class WarehouseController extends BaseController {
 
     }
 
+    @ApiOperation("入库单列表")
+    @GetMapping("inbound")
+    public BaseResponse<PageInfo<StreamDto>> getInbound(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<StreamDto> list = warehousePartService.getInboundList();
+        PageInfo<StreamDto> streamDtoPageInfo = new PageInfo<>(list);
+        return new BaseResponse<>(streamDtoPageInfo);
+    }
+
+    @Autowired
+    WarehouseInboundDetailService warehouseInboundDetailService;
+
+    @ApiOperation("入库单明细")
+    @GetMapping("inbound-detail")
+    public BaseResponse<InboundDto> getInboundDto(@RequestParam int inboundId) {
+        InboundDto inboundDto = warehouseInboundDetailService.getInboundDto(inboundId);
+        return new BaseResponse<>(inboundDto);
+    }
+
     @ApiOperation("零件出库")
     @PostMapping("outbound")
     public BaseResponse postOutbound(@RequestBody OutboundDto outboundDto) {
@@ -210,5 +229,24 @@ public class WarehouseController extends BaseController {
     public BaseResponse<PageInfo<PartSeqDto>> getAllPartWithMakeInfo(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
         PageInfo<PartSeqDto> seqDtoPageInfo = makeWorkBookSeqService.getPagePartWithMakeInfo(pageNum, pageSize);
         return new BaseResponse<>(seqDtoPageInfo);
+    }
+
+
+    @ApiOperation("分页查找零件列表")
+    @GetMapping("/parts")
+    public BaseResponse<PageInfo<PartCargoDto>> getPartPageInfo(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<PartCargoDto> dtoList = warehousePartService.getPartPageInfo();
+        PageInfo<PartCargoDto> partCargoDtoPageInfo = new PageInfo<>(dtoList);
+        return new BaseResponse<>(partCargoDtoPageInfo);
+    }
+
+    @ApiOperation("分页查找备件列表")
+    @GetMapping("/space-parts")
+    public BaseResponse<PageInfo<PartCargoDto>> getSpacePartPageInfo(@RequestParam @NotNull int pageNum, @RequestParam int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<PartCargoDto> dtoList = warehousePartService.getSpacePartPageInfo();
+        PageInfo<PartCargoDto> partCargoDtoPageInfo = new PageInfo<>(dtoList);
+        return new BaseResponse<>(partCargoDtoPageInfo);
     }
 }

@@ -4,17 +4,30 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ricemarch.cms.pms.entity.WarehouseInbound">
-        <id column="id" property="id" />
-        <result column="warehouse_id" property="warehouseId" />
-        <result column="count" property="count" />
-        <result column="create_by" property="createBy" />
-        <result column="create_name" property="createName" />
-        <result column="create_time" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="count" property="count"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, warehouse_id, count, create_by, create_name, create_time
     </sql>
+    <select id="getInboundList" resultType="com.ricemarch.cms.pms.dto.wms.StreamDto">
+        select wi.id            as id,
+               '入库'             as type,
+               up.name          as userName,
+               up.id            as uid,
+               wi.warehouse_id  as warehouseId,
+               w.warehouse_name as warehouseName,
+               wi.create_time   as createTime
+        from warehouse_inbound wi
+                 left join user_pg up on wi.create_by = up.id
+                 left join warehouse w on wi.warehouse_id = w.id
+        order by wi.create_time desc
+    </select>
 
 </mapper>

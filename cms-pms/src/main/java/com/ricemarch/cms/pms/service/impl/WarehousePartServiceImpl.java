@@ -2,12 +2,9 @@ package com.ricemarch.cms.pms.service.impl;
 
 import com.google.common.collect.Lists;
 import com.ricemarch.cms.pms.common.component.ColorUtils;
-import com.ricemarch.cms.pms.dto.wms.ItemStyle;
+import com.ricemarch.cms.pms.dto.wms.*;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ricemarch.cms.pms.dto.wms.PartCargoDetailDto;
-import com.ricemarch.cms.pms.dto.wms.PartCargoDto;
-import com.ricemarch.cms.pms.dto.wms.SunburstItem;
 import com.ricemarch.cms.pms.entity.*;
 import com.ricemarch.cms.pms.mapper.*;
 import com.ricemarch.cms.pms.service.WarehousePartService;
@@ -38,6 +35,9 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
 
     @Autowired
     WarehouseSpacePartMapper warehouseSpacePartMapper;
+
+    @Autowired
+    WarehouseInboundMapper inboundMapper;
 
     @Autowired
     WarehouseOutboundMapper warehouseOutboundMapper;
@@ -137,5 +137,20 @@ public class WarehousePartServiceImpl extends ServiceImpl<WarehousePartMapper, W
     @Override
     public WarehousePart getOutPartByCode(String code) {
         return warehousePartMapper.getOutPartByCode(code);
+    }
+
+    @Override
+    public List<StreamDto> getInboundList() {
+        return inboundMapper.getInboundList();
+    }
+
+    @Override
+    public List<PartCargoDto> getPartPageInfo() {
+        return warehousePartMapper.getPartPageInfo();
+    }
+
+    @Override
+    public List<PartCargoDto> getSpacePartPageInfo() {
+        return warehousePartMapper.getSpacePartPageInfo();
     }
 }

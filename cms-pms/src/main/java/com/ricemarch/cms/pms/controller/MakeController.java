@@ -102,6 +102,17 @@ public class MakeController extends BaseController {
         return new BaseResponse<>(is_init);
     }
 
+    @ApiOperation("结束当前工序")
+    @GetMapping("/end-step")
+    public BaseResponse<MakePartProcess> endStep(@RequestParam String code) {
+        Long userId = getUserId();
+        String userName = getUserName();
+        //code 是初始化的零件编号
+        // FOR TX
+        MakePartProcess end_step = makeTxService.endStep(code, userId, userName);
+        //记录加工user信息到 make_user_record
+        return new BaseResponse<>(end_step);
+    }
 
     @ApiOperation("根据零件名查找工序")
     @GetMapping("/steps")
@@ -120,14 +131,14 @@ public class MakeController extends BaseController {
 
     @ApiOperation("根据零件code获取零件个体信息")
     @GetMapping("/part")
-    public BaseResponse<WarehousePart> getPartByCode(@RequestParam String code){
+    public BaseResponse<WarehousePart> getPartByCode(@RequestParam String code) {
         WarehousePart warehousePart = warehousePartService.getOutPartByCode(code);
         return new BaseResponse<>(warehousePart);
     }
 
     @ApiOperation("根据零件code获取零件加工信息")
     @GetMapping("/workInfo")
-    public BaseResponse<MakePartProcess> getWorkInfoByCode(@RequestParam String code){
+    public BaseResponse<MakePartProcess> getWorkInfoByCode(@RequestParam String code) {
         MakePartProcess makePartProcess = makePartProcessService.findByCode(code);
         return new BaseResponse<>(makePartProcess);
     }

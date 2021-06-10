@@ -35,4 +35,8 @@ public interface WarehousePartMapper extends BaseMapper<WarehousePart> {
     WarehousePart getByCode(String code);
 
     WarehousePart getOutPartByCode(String code);
+
+    List<PartCargoDto> getPartPageInfo();
+
+    List<PartCargoDto> getSpacePartPageInfo();
 }

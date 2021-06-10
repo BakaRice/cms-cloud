@@ -2,13 +2,11 @@ package com.ricemarch.cms.pms.controller;
 
 
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
+import com.ricemarch.cms.pms.entity.QualityPartClaim;
 import com.ricemarch.cms.pms.service.QualityPartClaimService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -28,6 +26,14 @@ public class QualityController {
     @GetMapping
     public BaseResponse<String> getLevelCode(@RequestParam String name) {
         return new BaseResponse<>(qualityPartClaimService.getByPartName(name));
+    }
+
+    @PostMapping
+    public BaseResponse<Boolean> postLevelCide(@RequestBody QualityPartClaim qualityPartClaim) {
+        QualityPartClaim qualityPartClaim1 = new QualityPartClaim();
+        BeanUtils.copyProperties(qualityPartClaim, qualityPartClaim1);
+        boolean save = qualityPartClaimService.save(qualityPartClaim1);
+        return new BaseResponse<>(save);
     }
 
 }

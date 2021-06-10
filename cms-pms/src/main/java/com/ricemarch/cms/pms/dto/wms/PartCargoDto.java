@@ -25,6 +25,6 @@ public class PartCargoDto {
 //    private String code;
     private String supplierName;
     private Long supplierId;
-    private Integer cargoTypeId;
+    private String cargoTypeId;
     private String cargoTypeName;
 }

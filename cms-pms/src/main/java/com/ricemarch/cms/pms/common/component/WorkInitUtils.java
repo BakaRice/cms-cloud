@@ -5,6 +5,7 @@ import com.ricemarch.cms.pms.entity.QualityPartClaim;
 import com.ricemarch.cms.pms.entity.WarehousePart;
 import com.ricemarch.cms.pms.service.QualityPartClaimService;
 import com.ricemarch.cms.pms.service.WarehousePartService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.UUID;
  * @date 2021/5/21 13:24
  */
 @Service
+@Slf4j
 public class WorkInitUtils {
 
     @Autowired
@@ -31,6 +33,7 @@ public class WorkInitUtils {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         return code + date + uuid;
     }
+
 
     public static String initWorkId() {
         String date = LocalDateTime.now().toLocalDate().toString();
@@ -64,5 +67,20 @@ public class WorkInitUtils {
         String initBin = sb.toString();
         String hex = HexUtils.binToHex(initBin);
         return hex;
+    }
+
+    public static Integer getSeqValue(String flowCode) {
+        flowCode = HexUtils.hexToBin(flowCode);
+        // 0 start
+        int i = flowCode.substring(4).lastIndexOf("1");
+        return i+1;
+    }
+
+    public static String addSeqValue(String flowCode) {
+        flowCode = HexUtils.hexToBin(flowCode);
+        StringBuffer sb = new StringBuffer();
+        sb.append(flowCode, 0, 4);
+        sb.append(flowCode.substring(4).replaceFirst("0", "1"));
+        return HexUtils.binToHex(sb.toString());
     }
 }

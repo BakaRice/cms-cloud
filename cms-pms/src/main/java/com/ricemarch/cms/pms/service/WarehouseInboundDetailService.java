@@ -1,6 +1,7 @@
 package com.ricemarch.cms.pms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ricemarch.cms.pms.dto.wms.InboundDto;
 import com.ricemarch.cms.pms.entity.WarehouseInboundDetail;
 
 /**
@@ -13,4 +14,5 @@ import com.ricemarch.cms.pms.entity.WarehouseInboundDetail;
  */
 public interface WarehouseInboundDetailService extends IService<WarehouseInboundDetail> {
 
+    InboundDto getInboundDto(int inboundId);
 }

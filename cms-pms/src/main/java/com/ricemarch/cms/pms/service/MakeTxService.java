@@ -8,6 +8,8 @@ import com.ricemarch.cms.pms.common.expection.PmsServiceException;
 import com.ricemarch.cms.pms.common.facade.BaseResponse;
 import com.ricemarch.cms.pms.dto.make.WorkBookDto;
 import com.ricemarch.cms.pms.entity.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import org.springframework.util.CollectionUtils;
  * @date 2021/5/21 13:13
  */
 @Service
+@Slf4j
 public class MakeTxService {
 
     @Autowired
@@ -39,6 +42,9 @@ public class MakeTxService {
 
     @Autowired
     MakeWorkBookProcessService workBookProcessService;
+
+    @Autowired
+    MakeWorkBookSeqService workBookSeqService;
 
     @Autowired
     WorkInitUtils workInitUtils;
@@ -125,5 +131,43 @@ public class MakeTxService {
         });
         workBookProcessService.saveBatch(process);
         return new BaseResponse<>(save);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public MakePartProcess endStep(String code, Long userId, String userName) {
+
+        MakePartProcess makePartProcess = new MakePartProcess();
+        makePartProcess = processService.findByCode(code);
+        if (makePartProcess == null) {
+            throw new PmsServiceException("当前编号零件未完成加工初始化!");
+        }
+        String flowCode = makePartProcess.getFlowCode();
+        Integer seqValue = WorkInitUtils.getSeqValue(flowCode);
+seqValue++;
+        WarehousePart outPartByCode = warehousePartService.getOutPartByCode(code);
+        List<MakeWorkBookSeq> list = seqService.getStepsByName(outPartByCode.getName());
+        int allSize = list.size();
+
+        log.debug("flowCode:{}\nseqValue:{}", flowCode, seqValue);
+        String s = WorkInitUtils.addSeqValue(flowCode);
+        MakePartProcess newProcess = new MakePartProcess();
+        BeanUtils.copyProperties(makePartProcess, newProcess);
+        newProcess.setFlowCode(s);
+        if (seqValue > 0) {
+            newProcess.setStatus(1);
+            if (seqValue == allSize) {
+                newProcess.setStatus(3);
+            }else  if (seqValue > allSize){
+                throw new PmsServiceException("工序流转已经结束!");
+            }
+        }
+        processService.saveOrUpdate(newProcess);
+        //记录user recode
+        MakeUserRecord makeUserRecord = new MakeUserRecord();
+        makeUserRecord.setUserId(userId);
+        makeUserRecord.setPartCode(code);
+        makeUserRecord.setUserName(userName);
+        makeUserRecord.setTime(LocalDateTime.now());
+        return newProcess;
     }
 }
